@@ -13,9 +13,10 @@ The docker-compose file relies on several environment variables to be set to run
 ```
 AWS_ACCESS_KEY_ID=fakeAccessKey
 AWS_SECRET_ACCESS_KEY=fakeSecretAccessKey
+CHAT_API_LOCALHOST_PORT=5000
+CHAT_DYNAMODB_TABLE_NAME=local-chat
+CHAT_UI_LOCALHOST_PORT=3000
 FLASK_ENV=development
-UI_LOCALHOST_PORT=3000
-API_LOCALHOST_PORT=5000
 ```
 
 ## Run It
@@ -25,3 +26,15 @@ Once the above prerequistes have been satisfied we're ready to let Docker Compos
 ```sh
 docker-compose up
 ```
+
+# Local Development (In Docker)
+
+This is totally new to me. But I stumbled across it in the process of working through some things and wanted to give it a go.
+
+## Extension
+
+https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
+
+## Opening Up Folder
+
+https://code.visualstudio.com/docs/remote/containers
