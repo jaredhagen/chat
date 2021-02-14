@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  api:
+    build: ./api
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      FLASK_ENV: ${FLASK_ENV}
+    ports:
+      - "${API_LOCALHOST_PORT}:5000"
+    volumes:
+      - ./api/src:/app/src
+      - ./api/requirements.txt:/app/requirements.txt
+  ui:
+    build: ./ui
+    ports:
+      - "${UI_LOCALHOST_PORT}:3000"
+    volumes:
+      - ./ui:/usr/src/app
+      - /usr/src/app/node_modules
+  dynamodb:
+    image: amazon/dynamodb-local
+    ports:
+      - 8000:8000
+  dynamodb-setup:
+    image: amazon/aws-cli
+    depends_on:
+      - dynamodb
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    command: |
+      dynamodb create-table
+      --region us-east-1
+      --endpoint-url http://dynamodb:8000
+      --table-name local-chat
+      --attribute-definitions
+        AttributeName=PK,AttributeType=S
+        AttributeName=SK,AttributeType=S
+      --key-schema
+        AttributeName=PK,KeyType=HASH
+        AttributeName=SK,KeyType=RANGE
+      --provisioned-throughput
+        ReadCapacityUnits=1,WriteCapacityUnits=1
