@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 EXPOSE 5000
 
-ENV FLASK_APP=src
+ENV FLASK_APP=chat_app
 ENV FLASK_RUN_HOST=0.0.0.0
 
 COPY requirements.txt ./

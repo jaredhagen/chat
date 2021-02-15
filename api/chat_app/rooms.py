@@ -4,8 +4,8 @@ from boto3.dynamodb.conditions import Key
 from flask import Blueprint, request
 from flask_expects_json import expects_json
 
-from src.auth import auth
-from src.dynamodb import get_chat_table, PK, ROOM_PARTITION_KEY, SK
+from chat_app.auth import auth
+from chat_app.dynamodb import get_chat_table, PK, ROOM_PARTITION_KEY, SK
 
 
 ROOM_ID_PREFIX = "ROM"

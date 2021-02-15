@@ -1,10 +1,10 @@
 
 from botocore.exceptions import ClientError
-from flask import abort, current_app
+from flask import current_app
 from flask_httpauth import HTTPTokenAuth
-from werkzeug.exceptions import Forbidden, InternalServerError, Unauthorized
+from werkzeug.exceptions import Forbidden, Unauthorized
 
-from src.dynamodb import get_chat_table, PK, SK, USER_PARTITION_KEY
+from chat_app.dynamodb import get_chat_table, PK, SK, USER_PARTITION_KEY
 
 auth = HTTPTokenAuth(scheme='Bearer')
 
@@ -19,12 +19,14 @@ def verify_token(token):
             }
         )
     except ClientError as e:
-        return False
+        current_app.logger.error(e)
+        return None
     else:
+        current_app.logger.error(response)
         if 'Item' in response:
             username = response['Item'][SK]
             return username
-        return False
+        return None
 
 
 # The Flask_HTTPAuth package doesn't raise http exceptions like it

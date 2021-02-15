@@ -6,14 +6,22 @@ from flask import Blueprint, request
 from flask_expects_json import expects_json
 from werkzeug.exceptions import InternalServerError
 
-from src.auth import auth
-from src.dynamodb import get_chat_table, PK, SK
+from chat_app.auth import auth
+from chat_app.dynamodb import get_chat_table, PK, SK
 
 MESSAGE_ID_PREFIX = "MSG"
 
 
 def new_message_id():
     return "{}{}".format(MESSAGE_ID_PREFIX, str(ulid.new()))
+
+
+def message_from_item(item):
+    return {
+        'id': item[SK],
+        'content': item['content'],
+        'author': item['author']
+    }
 
 
 bp = Blueprint('messages', __name__, url_prefix='/rooms/<room_id>/messages')
@@ -36,8 +44,7 @@ def add_message(room_id):
     message_content = request.json['content']
 
     try:
-
-        response = get_chat_table().put_item(
+        get_chat_table().put_item(
             Item={
                 PK: room_id,
                 SK: message_id,
@@ -58,9 +65,14 @@ def add_message(room_id):
 @bp.route('', methods=['GET'])
 @auth.login_required
 def get_messages(room_id):
-    response = get_chat_table().query(
-        KeyConditionExpression=Key(PK).eq(room_id)
-    )
-    return {
-        'messages': response['Items']
-    }
+    try:
+        response = get_chat_table().query(
+            KeyConditionExpression=Key(PK).eq(room_id)
+        )
+    except ClientError as e:
+        raise
+    else:
+        items = response['Items']
+        return {
+            'messages': [message_from_item(item) for item in items]
+        }
