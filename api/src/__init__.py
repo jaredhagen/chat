@@ -1,6 +1,5 @@
-import os
-
 from flask import Flask
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -16,7 +15,16 @@ def create_app(test_config=None):
         # load the test config if passed in
         app.config.from_mapping(test_config)
 
+    from . import errors
+    errors.register_error_handlers(app)
+
+    from . import users
+    app.register_blueprint(users.bp)
+
     from . import rooms
     app.register_blueprint(rooms.bp)
+
+    from . import messages
+    app.register_blueprint(messages.bp)
 
     return app
