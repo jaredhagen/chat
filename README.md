@@ -27,6 +27,12 @@ Once the above prerequistes have been satisfied we're ready to let Docker Compos
 docker-compose up
 ```
 
+# Running Tests
+
+```sh
+docker-compose -f docker-compose.tests.yml up --build --abort-on-container-exit
+```
+
 # Local Development (In Docker)
 
 This is totally new to me. But I stumbled across it in the process of working through some things and wanted to give it a go.

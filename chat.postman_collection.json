@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "0f895236-d9f6-4994-a35c-675e166a9430",
+		"name": "chat",
+		"description": "Used for testing endpoints of the chat-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add User",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"default\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/users",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"default\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/users/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Room",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Room 237\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/rooms",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rooms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Room Message",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"content\": \"Hello!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/rooms/:id/messages",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rooms",
+						":id",
+						"messages"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "ROM01EYMFSQHJFW6QB8Z5140WHBEW"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Rooms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/rooms",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rooms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Room Messages",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/rooms/:id/messages",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"rooms",
+						":id",
+						"messages"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "ROM01EYMFSQHJFW6QB8Z5140WHBEW"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{chat_username}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5000"
+		}
+	]
+}

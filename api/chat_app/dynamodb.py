@@ -32,10 +32,10 @@ def get_chat_table():
 
 def get_dynamodb():
     if 'dynamodb' not in g:
-        port = current_app.config['CHAT_DYNAMODB_LOCALHOST_PORT']
+        endpoint_url = current_app.config['CHAT_DYNAMODB_ENDPOINT_URL']
         g.dynamodb = boto3.resource(
             'dynamodb',
-            endpoint_url="http://dynamodb:{}".format(port),
+            endpoint_url=endpoint_url,
             region_name="us-east-1"
         )
 

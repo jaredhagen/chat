@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  tests-api:
+    build: ./api
+    depends_on:
+      - tests-dynamodb
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      FLASK_ENV: ${FLASK_ENV}
+    command: ["python", "-m", "pytest", "tests", "-vv"]
+  tests-dynamodb:
+    image: amazon/dynamodb-local

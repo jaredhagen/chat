@@ -13,6 +13,7 @@ services:
       - "${CHAT_API_LOCALHOST_PORT}:5000"
     volumes:
       - ./api:/usr/src/app
+      - /usr/src/app/venv
   ui:
     build: ./ui
     ports:

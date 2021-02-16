@@ -15,6 +15,14 @@ def new_room_id():
     return "{}{}".format(ROOM_ID_PREFIX, str(ulid.new()))
 
 
+def room_from_item(item):
+    return {
+        'id': item[SK],
+        'name': item['name'],
+        'creator': item['creator']
+    }
+
+
 bp = Blueprint('rooms', __name__, url_prefix='/rooms')
 
 add_room_schema = {
@@ -30,19 +38,22 @@ add_room_schema = {
 @expects_json(add_room_schema)
 @auth.login_required
 def add_room():
+    username = auth.current_user()
     room_id = new_room_id()
     room_name = request.json['name']
 
-    response = get_chat_table().put_item(
+    get_chat_table().put_item(
         Item={
             PK: ROOM_PARTITION_KEY,
             SK: room_id,
-            'name': room_name
+            'name': room_name,
+            'creator': username
         }
     )
     return {
         'id': room_id,
-        'name': room_name
+        'name': room_name,
+        'creator': username
     }
 
 
@@ -53,6 +64,7 @@ def get_rooms():
         KeyConditionExpression=Key(
             PK).eq(ROOM_PARTITION_KEY)
     )
+    items = response['Items']
     return {
-        'rooms': response['Items']
+        'rooms': [room_from_item(item) for item in items]
     }
