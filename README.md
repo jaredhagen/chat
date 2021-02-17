@@ -44,3 +44,7 @@ https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-cont
 ## Opening Up Folder
 
 https://code.visualstudio.com/docs/remote/containers
+
+# Bugs
+
+Twice I've noticed the `dynamodb-setup` container start up and run before the `dynamodb` container is ready to handle requests. It's rare but, if this happens just run `docker-compose up` again and it usually works.

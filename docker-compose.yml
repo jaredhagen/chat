@@ -16,6 +16,8 @@ services:
       - /usr/src/app/venv
   ui:
     build: ./ui
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
     ports:
       - "${CHAT_UI_LOCALHOST_PORT}:3000"
     volumes:
@@ -24,7 +26,7 @@ services:
   dynamodb:
     image: amazon/dynamodb-local
     ports:
-      - ${CHAT_DYNAMODB_LOCALHOST_PORT}:8000
+      - "${CHAT_DYNAMODB_LOCALHOST_PORT}:8000"
   dynamodb-setup:
     image: amazon/aws-cli
     depends_on:
