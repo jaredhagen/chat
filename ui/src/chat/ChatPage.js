@@ -1,34 +1,13 @@
-import { Layout, Menu, Spin } from "antd";
-import Messages from "./Messages";
-import { useRooms } from "./hooks";
+import { Layout } from "antd";
+import { Messages, MessageEditor, Rooms } from "./components";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 function ChatPage() {
-  const { isLoading, error, data } = useRooms();
-
-  if (isLoading) return <Spin size="large" />;
-
-  if (error) return <div>Womp!</div>;
-
-  const rooms = data.rooms;
-
   return (
     <Layout>
       <Sider theme="light" breakpoint="md" collapsedWidth="0">
-        <Menu
-          mode="inline"
-          style={{
-            height: "100vh",
-            overflowX: "hidden",
-            overflowY: "scroll",
-          }}
-        >
-          <Menu.Item>Add A Room</Menu.Item>
-          {rooms.map((room) => (
-            <Menu.Item>{room.name}</Menu.Item>
-          ))}
-        </Menu>
+        <Rooms />
       </Sider>
       <Layout>
         <Header
@@ -41,6 +20,12 @@ function ChatPage() {
         <Content
           style={{
             background: "#fff",
+            padding: "0 40px",
+            height: "calc(100vh - 96px - 64px)",
+            overflowY: "scroll",
+            // Fancy css trick to keep the scroll pinned to the bottom. Neat!
+            display: "flex",
+            flexDirection: "column-reverse",
           }}
         >
           <Messages></Messages>
@@ -48,9 +33,10 @@ function ChatPage() {
         <Footer
           style={{
             background: "#fff",
+            paddingBottom: "40px",
           }}
         >
-          Footer
+          <MessageEditor></MessageEditor>
         </Footer>
       </Layout>
     </Layout>

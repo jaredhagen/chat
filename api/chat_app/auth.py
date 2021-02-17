@@ -11,22 +11,24 @@ auth = HTTPTokenAuth(scheme='Bearer')
 
 @auth.verify_token
 def verify_token(token):
-    try:
-        response = get_chat_table().get_item(
-            Key={
-                PK: USER_PARTITION_KEY,
-                SK: token
-            }
-        )
-    except ClientError as e:
-        current_app.logger.error(e)
+    if not token:
         return None
     else:
-        current_app.logger.error(response)
-        if 'Item' in response:
-            username = response['Item'][SK]
-            return username
-        return None
+        try:
+            response = get_chat_table().get_item(
+                Key={
+                    PK: USER_PARTITION_KEY,
+                    SK: token
+                }
+            )
+        except ClientError as e:
+            current_app.logger.error(e)
+            return None
+        else:
+            if 'Item' in response:
+                username = response['Item'][SK]
+                return username
+            return None
 
 
 # The Flask_HTTPAuth package doesn't raise http exceptions like it

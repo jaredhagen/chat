@@ -18,7 +18,7 @@ function App() {
             <Route path="/login">
               <LoginPage />
             </Route>
-            <PrivateRoute path="/">
+            <PrivateRoute path={["/rooms/:roomId", "/"]}>
               <ChatPage />
             </PrivateRoute>
           </Switch>

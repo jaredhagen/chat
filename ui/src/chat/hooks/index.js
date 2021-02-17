@@ -1,4 +1,5 @@
-import useMessages from "./useMessages";
-import useRooms from "./useRooms";
+import useGetMessages from "./useGetMessages";
+import useGetRooms from "./useGetRooms";
+import usePostMessage from "./usePostMessage";
 
-export { useMessages, useRooms };
+export { useGetMessages, useGetRooms, usePostMessage };
