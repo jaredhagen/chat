@@ -2,26 +2,52 @@ import ulid
 
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key
+from dataclasses import dataclass, field
 from flask import Blueprint, request
 from flask_expects_json import expects_json
-from werkzeug.exceptions import InternalServerError
+from werkzeug.exceptions import InternalServerError, NotFound
 
 from chat_app.auth import auth
-from chat_app.dynamodb import get_chat_table, PK, SK
-
-MESSAGE_ID_PREFIX = "MSG"
+from chat_app.rooms import Room
+from chat_app.dynamodb import epoch_time, get_item, query_partition, add_item, update_item, PK, SK, ROOM_PARTITION_KEY
 
 
 def new_message_id():
-    return "{}{}".format(MESSAGE_ID_PREFIX, str(ulid.new()))
+    return str(ulid.new())
 
 
-def message_from_item(item):
-    return {
-        'id': item[SK],
-        'content': item['content'],
-        'author': item['author']
-    }
+@dataclass
+class Message:
+    author: str
+    content: str
+    id: int = field(default_factory=new_message_id)
+    created_at: int = field(default_factory=epoch_time)
+
+    def to_dynamodb_item(self, room_id):
+        return {
+            PK: room_id,
+            SK: self.id,
+            'author': self.author,
+            'content': self.content,
+            'created_at': self.created_at
+        }
+
+    def to_api_response(self):
+        return {
+            'author': self.author,
+            'content': self.content,
+            'created_at': self.created_at,
+            'id': self.id
+        }
+
+    @staticmethod
+    def from_dynamodb_item(item):
+        return Message(
+            item['author'],
+            item['content'],
+            item[SK],
+            int(item['created_at'])
+        )
 
 
 bp = Blueprint('messages', __name__, url_prefix='/rooms/<room_id>/messages')
@@ -36,43 +62,24 @@ add_message_schema = {
 
 
 @bp.route('', methods=['POST'])
-@expects_json(add_message_schema)
 @auth.login_required
+@expects_json(add_message_schema)
 def add_message(room_id):
-    username = auth.current_user()
-    message_id = new_message_id()
-    message_content = request.json['content']
-
-    try:
-        get_chat_table().put_item(
-            Item={
-                PK: room_id,
-                SK: message_id,
-                'content': message_content,
-                'author': username
-            }
-        )
-    except ClientError as e:
-        raise InternalServerError()
-    else:
-        return {
-            'id': message_id,
-            'content': message_content,
-            'author': username
-        }
+    room_item = get_item({ PK: ROOM_PARTITION_KEY, SK: room_id })
+    if room_item is None:
+        raise NotFound("Can't add message to non-existent room")
+    room = Room.from_dynamodb_item(room_item)
+    message = Message(auth.current_user(), request.json['content'])
+    room.last_active_at = message.created_at
+    add_item(message.to_dynamodb_item(room_id))
+    update_item(room.to_dynamodb_item())
+    return message.to_api_response()
 
 
 @bp.route('', methods=['GET'])
 @auth.login_required
 def get_messages(room_id):
-    try:
-        response = get_chat_table().query(
-            KeyConditionExpression=Key(PK).eq(room_id)
-        )
-    except ClientError as e:
-        raise
-    else:
-        items = response['Items']
-        return {
-            'messages': [message_from_item(item) for item in items]
-        }
+    items = query_partition(room_id)
+    return {
+        'messages': [Message.from_dynamodb_item(item).to_api_response() for item in items]
+    }

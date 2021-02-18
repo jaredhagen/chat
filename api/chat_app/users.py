@@ -1,12 +1,12 @@
-from botocore.exceptions import ClientError
-from flask import Blueprint, current_app, request
+from flask import Blueprint, request
 from flask_expects_json import expects_json
-from werkzeug.exceptions import Conflict, InternalServerError, Unauthorized
+from werkzeug.exceptions import Unauthorized
 
-from chat_app.auth import auth
-from chat_app.dynamodb import get_chat_table, PK, SK, USER_PARTITION_KEY
+from chat_app.dynamodb import add_item, get_item, PK, SK, USER_PARTITION_KEY
+
 
 bp = Blueprint('users', __name__, url_prefix="/users")
+
 
 add_user_schema = {
     'type': 'object',
@@ -21,24 +21,11 @@ add_user_schema = {
 @expects_json(add_user_schema)
 def add_user():
     username = request.json['username']
-    try:
-        get_chat_table().put_item(
-            Item={
-                PK: USER_PARTITION_KEY,
-                SK: username
-            },
-            ConditionExpression=('attribute_not_exists({})'.format(PK))
-        )
-    except ClientError as e:
-        current_app.logger.error(e)
-        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
-            raise Conflict('Username already exists.')
-        else:
-            raise e
-    else:
-        return {
-            'username': username
-        }
+    add_item({
+        PK: USER_PARTITION_KEY,
+        SK: username
+    })
+    return { 'username': username }
 
 
 user_login_schema = {
@@ -54,20 +41,11 @@ user_login_schema = {
 @expects_json(user_login_schema)
 def user_login():
     username = request.json['username']
-    try:
-        response = get_chat_table().get_item(
-            Key={
-                PK: USER_PARTITION_KEY,
-                SK: username
-            }
-        )
-    except ClientError as e:
-        current_app.logger.error(e)
-        raise InternalServerError()
+    item = get_item({
+        PK: USER_PARTITION_KEY,
+        SK: username
+    })
+    if item is None:
+        raise Unauthorized("Invalid credentials.")
     else:
-        current_app.logger.debug(response)
-        if 'Item' in response:
-            token = response['Item'][SK]
-            return {'token': token}
-        else:
-            raise Unauthorized("Invalid credentials.")
+        return { 'username': username }

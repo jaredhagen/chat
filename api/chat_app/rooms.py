@@ -1,70 +1,69 @@
-import ulid
+import time
 
-from boto3.dynamodb.conditions import Key
+from dataclasses import dataclass, field
 from flask import Blueprint, request
 from flask_expects_json import expects_json
 
 from chat_app.auth import auth
-from chat_app.dynamodb import get_chat_table, PK, ROOM_PARTITION_KEY, SK
+from chat_app.dynamodb import epoch_time, query_partition, add_item, PK, ROOM_PARTITION_KEY, SK
 
 
-ROOM_ID_PREFIX = "ROM"
+@dataclass
+class Room:
+    id: str
+    last_active_at: int = field(default_factory=epoch_time)
 
+    def to_dynamodb_item(self):
+        return {
+            PK: ROOM_PARTITION_KEY,
+            SK: self.id,
+            'last_active_at': self.last_active_at
+        }
 
-def new_room_id():
-    return "{}{}".format(ROOM_ID_PREFIX, str(ulid.new()))
+    def to_api_response(self):
+        return {
+            'id': self.id,
+            'lastActiveAt': self.last_active_at,
+            'name': self.id
+        }
 
-
-def room_from_item(item):
-    return {
-        'id': item[SK],
-        'name': item['name'],
-        'creator': item['creator']
-    }
+    @staticmethod
+    def from_dynamodb_item(item: dict):
+        return Room(
+            item[SK],
+            int(item['last_active_at']),
+        )
 
 
 bp = Blueprint('rooms', __name__, url_prefix='/rooms')
 
+
 add_room_schema = {
     'type': 'object',
     'properties': {
-        'name': {'type': 'string'},
+        'id': {'type': 'string'},
     },
-    'required': ['name']
+    'required': ['id']
 }
 
 
-@bp.route('', methods=['POST'])
-@expects_json(add_room_schema)
-@auth.login_required
-def add_room():
-    username = auth.current_user()
-    room_id = new_room_id()
-    room_name = request.json['name']
 
-    get_chat_table().put_item(
-        Item={
-            PK: ROOM_PARTITION_KEY,
-            SK: room_id,
-            'name': room_name,
-            'creator': username
-        }
-    )
-    return {
-        'id': room_id,
-        'name': room_name,
-        'creator': username
-    }
+@bp.route('', methods=['POST'])
+@auth.login_required
+@expects_json(add_room_schema)
+def add_room():
+    room = Room(request.json['id'])
+    add_item(room.to_dynamodb_item())
+    return room.to_api_response()
+
 
 
 @bp.route('', methods=['GET'])
 @auth.login_required
 def get_rooms():
-    response = get_chat_table().query(
-        KeyConditionExpression=Key(
-            PK).eq(ROOM_PARTITION_KEY)
-    )
-    items = response['Items']
+    items = query_partition(ROOM_PARTITION_KEY)
+    rooms = [Room.from_dynamodb_item(item) for item in items]
+    rooms.sort(key=(lambda room: room.last_active_at), reverse=True)
     return {
-        'rooms': [room_from_item(item) for item in items]
+        'rooms': [room.to_api_response() for room in rooms]
     }

@@ -1,7 +1,12 @@
 import boto3
 import os
+import time
 
+from boto3.dynamodb.conditions import Key
+from botocore.exceptions import ClientError
 from flask import current_app, g
+from werkzeug.exceptions import Conflict, InternalServerError, NotFound
+
 
 # If you're unfamiliar with DynamoDB I highly recommend watching the
 # following video. It's long but worth the time IMHO.
@@ -19,6 +24,10 @@ SK = 'sk'
 # to partition the users and rooms by account.
 USER_PARTITION_KEY = 'users'
 ROOM_PARTITION_KEY = 'rooms'
+
+
+def epoch_time():
+    return int(time.time())
 
 
 def get_chat_table():
@@ -40,3 +49,63 @@ def get_dynamodb():
         )
 
     return g.dynamodb
+
+
+def add_item(item):
+    try:
+        get_chat_table().put_item(
+            Item=item,
+            ConditionExpression=('attribute_not_exists({})'.format(PK))
+        )
+    except ClientError as e:
+        current_app.logger.error(e)
+        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+            raise Conflict('Resource already exists.')
+        else:
+            raise InternalServerError()
+    else:
+        return item
+
+
+def get_item(key):
+    try:
+        response = get_chat_table().get_item(Key=key)
+    except ClientError as e: 
+        current_app.logger.error(e)
+        raise InternalServerError()
+    else:
+        if 'Item' in response:
+            return response['Item']
+        else:
+            return None
+
+
+def query_partition(partition_key):
+    try:
+        response = get_chat_table().query(
+            KeyConditionExpression=Key(PK).eq(partition_key)
+        )
+    except ClientError as e:
+        current_app.logger.error(e)
+        raise InternalServerError()
+    else:
+        if 'Items' in response:
+            return response['Items']
+        else:
+            return []
+
+        
+def update_item(item):
+    try:
+        get_chat_table().put_item(
+            Item=item,
+            ConditionExpression=('attribute_exists({})'.format(PK))
+        )
+    except ClientError as e:
+        current_app.logger.error(e)
+        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+            raise NotFound('Resource not found.')
+        else:
+            raise InternalServerError()
+    else:
+        return item
