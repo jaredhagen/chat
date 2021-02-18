@@ -1,4 +1,5 @@
 import pytest
+import time
 
 
 # Used to remove generated attributes from the message objects returned
@@ -40,6 +41,16 @@ def test_add_message(integration_client, authorized_user, with_room):
     }
 
 
+def test_add_message_to_non_existent_room(integration_client, authorized_user):
+    response = integration_client.post(
+        '/rooms/{}/messages'.format('make believe'), json={'content': 'Bonjour'}, headers=authorized_user)
+    assert response.get_json() == {
+        'error': 'Not Found',
+        'message': "Can't add message to non-existent room",
+        'status_code': 404,
+    }
+
+
 def test_unauthorized_list_messages(integration_client, unauthorized_user, with_room):
     response = integration_client.get(
         '/rooms/{}/messages'.format(with_room), headers=unauthorized_user)
@@ -76,3 +87,14 @@ def test_list_messages(integration_client, authorized_user, with_room):
             'content': 'Guten Tag'
         }
     ]
+
+
+def test_message_activity_updates_room_activity(integration_client, authorized_user, with_room):
+    rooms_before = integration_client.get(
+        '/rooms', headers=authorized_user).get_json()
+    time.sleep(1)
+    integration_client.post(
+        '/rooms/{}/messages'.format(with_room), json={'content': 'Hola'}, headers=authorized_user)
+    rooms_after = integration_client.get(
+        '/rooms', headers=authorized_user).get_json()
+    assert rooms_before['rooms'][0]['lastActiveAt'] < rooms_after['rooms'][0]['lastActiveAt']

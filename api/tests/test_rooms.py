@@ -1,3 +1,5 @@
+import time
+
 # Used to remove generated attributes from the message objects returned
 # by the api. I'm removing them to simplify testing. In a real world 
 # scenario I'd likely spend the time to figure out how to configure the
@@ -49,7 +51,6 @@ def test_list_rooms(integration_client, authorized_user):
     integration_client.post(
         '/rooms', json={'id': 'Room 237'}, headers=authorized_user)
     response = integration_client.get('/rooms', headers=authorized_user)
-
     rooms = response.get_json()['rooms']
     rooms_sans_generated = [remove_generated_values(room) for room in rooms]
     assert rooms_sans_generated == [
@@ -60,5 +61,41 @@ def test_list_rooms(integration_client, authorized_user):
         {
             'id': 'Room 237',
             'name': 'Room 237'
+        }
+    ]
+
+
+def test_list_rooms_by_activity(integration_client, authorized_user):
+    integration_client.post(
+        '/rooms', json={'id': 'Room 104'}, headers=authorized_user)
+    integration_client.post(
+        '/rooms', json={'id': 'Room 237'}, headers=authorized_user)
+    response = integration_client.get('/rooms', headers=authorized_user)
+    rooms = response.get_json()['rooms']
+    rooms_sans_generated = [remove_generated_values(room) for room in rooms]
+    assert rooms_sans_generated == [
+        {
+            'id': 'Room 104',
+            'name': 'Room 104'
+        },
+        {
+            'id': 'Room 237',
+            'name': 'Room 237'
+        }
+    ]
+    time.sleep(1)
+    integration_client.post(
+        '/rooms/{}/messages'.format('Room 237'), json={'content': 'Hola'}, headers=authorized_user)
+    response = integration_client.get('/rooms', headers=authorized_user)
+    rooms = response.get_json()['rooms']
+    rooms_sans_generated = [remove_generated_values(room) for room in rooms]
+    assert rooms_sans_generated == [
+        {
+            'id': 'Room 237',
+            'name': 'Room 237'
+        },
+        {
+            'id': 'Room 104',
+            'name': 'Room 104'
         }
     ]
