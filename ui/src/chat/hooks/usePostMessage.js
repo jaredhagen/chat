@@ -38,7 +38,7 @@ export default function usePostMessage(roomId) {
 
         return { previousMessages };
       },
-      onError: (err, newTodo, context) => {
+      onError: (err, newMessage, context) => {
         queryClient.setQueryData(messagesQueryKey, context.previousMessages);
       },
       onSettled: () => {

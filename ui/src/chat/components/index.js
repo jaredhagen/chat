@@ -1,5 +1,13 @@
 import Messages from "./Messages";
 import MessageEditor from "./MessageEditor";
-import Rooms from "./Rooms";
+import RoomHeader from "./RoomHeader";
+import { RoomsMenu, RoomsMenuContext, RoomsMenuProvider } from "./RoomsMenu";
 
-export { Messages, MessageEditor, Rooms };
+export {
+  Messages,
+  MessageEditor,
+  RoomHeader,
+  RoomsMenu,
+  RoomsMenuContext,
+  RoomsMenuProvider,
+};

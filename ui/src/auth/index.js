@@ -1,13 +1,5 @@
-import { useAuth, ProvideAuth, AuthButton } from "./useAuth";
+import { useAuth, ProvideAuth } from "./hooks/useAuth";
 import LoginPage from "./LoginPage";
-import PrivateRoute from "./PrivateRoute";
-import SignUpPage from "./SignUpPage";
+import PrivateRoute from "./components/PrivateRoute";
 
-export {
-  useAuth,
-  ProvideAuth,
-  AuthButton,
-  LoginPage,
-  PrivateRoute,
-  SignUpPage,
-};
+export { useAuth, ProvideAuth, LoginPage, PrivateRoute };

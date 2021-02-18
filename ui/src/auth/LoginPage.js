@@ -1,24 +1,69 @@
-import { useHistory, useLocation } from "react-router-dom";
-import { AuthButton, useAuth } from "./useAuth";
+import { Col, Button, Form, Input, Row, Typography } from "antd";
+import { Redirect } from "react-router-dom";
+import { useAuth, useLogInUser } from "./hooks";
 
 function LoginPage() {
-  let history = useHistory();
-  let location = useLocation();
-  let auth = useAuth();
+  const auth = useAuth();
+  const logInUser = useLogInUser();
 
-  let { from } = location.state || { from: { pathname: "/" } };
-  let login = () => {
-    auth.signin(() => {
-      history.replace(from);
-    });
+  const onFinish = (credentials) => {
+    logInUser.mutate(credentials);
   };
 
-  return (
-    <div>
-      <p>You must log in to view the page at {from.pathname}</p>
-      <button onClick={login}>Log in</button>
-      <AuthButton />
-    </div>
+  return logInUser.isSuccess ? (
+    <Redirect push={true} to={{ pathname: "/" }}></Redirect>
+  ) : (
+    <Row
+      align="middle"
+      style={{
+        height: "100vh",
+      }}
+    >
+      <Col span={24}>
+        <Row justify="center">
+          <Col>
+            <Typography.Title>Log in to Chat</Typography.Title>
+          </Col>
+        </Row>
+        <Row>
+          <Col offset={7} span={10}>
+            <Form
+              name="login"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+            >
+              <Form.Item
+                name="username"
+                hasFeedback={logInUser.isLoading || logInUser.isError}
+                validateStatus={
+                  logInUser.isLoading
+                    ? "validating"
+                    : logInUser.isError
+                    ? "error"
+                    : ""
+                }
+                help={logInUser.isError ? "Invalid username" : null}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
+              >
+                <Input placeholder="Username" />
+              </Form.Item>
+              <Form.Item>
+                <Button block type="primary" htmlType="submit">
+                  Log In
+                </Button>
+              </Form.Item>
+            </Form>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
   );
 }
 
