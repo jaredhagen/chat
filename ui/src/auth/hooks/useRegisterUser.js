@@ -15,15 +15,14 @@ export default function useUserLogin() {
       return response.data;
     },
     {
-      onSettled: (data) => {
-        const user = {
-          username: data.username,
-          token: data.username,
-        };
-        auth.logIn(user);
-      },
-      onError: () => {
-        console.log("hmmmmmmmm");
+      onSettled: (data, error) => {
+        if (!error) {
+          const user = {
+            username: data.username,
+            token: data.username,
+          };
+          auth.logIn(user);
+        }
       },
     }
   );

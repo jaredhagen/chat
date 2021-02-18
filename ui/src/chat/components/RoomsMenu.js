@@ -34,7 +34,7 @@ function RoomsMenu() {
 
   useEffect(() => {
     // This is a bit of a mess.  If I had more time I'd figure out a better solution
-    if (!isLoading && !selectedRoom) {
+    if (!isLoading && !selectedRoom && data.rooms.length) {
       let roomToSelect;
       // Set the selected room to the one in the url if we can find it
       if (urlParams.roomId) {

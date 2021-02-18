@@ -6,8 +6,6 @@ function LoginPage() {
   const auth = useAuth();
   const registerUser = useRegisterUser();
 
-  console.log(registerUser.isError);
-
   const onFinish = (username) => {
     registerUser.mutate(username);
   };

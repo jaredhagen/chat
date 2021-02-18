@@ -6,8 +6,6 @@ function LoginPage() {
   const auth = useAuth();
   const logInUser = useLogInUser();
 
-  console.log("error", logInUser.isError);
-
   const onFinish = (credentials) => {
     logInUser.mutate(credentials);
   };

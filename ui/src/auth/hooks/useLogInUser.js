@@ -16,11 +16,10 @@ export default function useUserLogin() {
     },
     {
       onSettled: (data, error, credentials) => {
-        const user = { username: credentials.username, token: data.token };
-        auth.logIn(user);
-      },
-      onError: () => {
-        console.log("hmmm");
+        if (!error) {
+          const user = { username: credentials.username, token: data.token };
+          auth.logIn(user);
+        }
       },
     }
   );
