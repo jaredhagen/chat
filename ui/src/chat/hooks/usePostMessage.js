@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
+import { useAuth } from "../../auth";
 
 // See: https://react-query.tanstack.com/guides/optimistic-updates
 export default function usePostMessage(roomId) {
   const queryClient = useQueryClient();
+  const auth = useAuth();
   const messagesQueryKey = ["messages", roomId];
   return useMutation(
     async (newMessage) => {
@@ -12,7 +14,7 @@ export default function usePostMessage(roomId) {
         newMessage,
         {
           headers: {
-            Authorization: "Bearer default",
+            Authorization: `Bearer ${auth.user.token}`,
           },
         }
       );
@@ -23,13 +25,12 @@ export default function usePostMessage(roomId) {
         await queryClient.cancelQueries(messagesQueryKey);
         const previousMessages = queryClient.getQueryData(messagesQueryKey);
         queryClient.setQueryData(messagesQueryKey, (old) => {
-          console.log(old);
           return {
             messages: [
               ...old.messages,
               {
                 id: "temp",
-                author: "default",
+                author: auth.user.username,
                 ...newMessage,
               },
             ],

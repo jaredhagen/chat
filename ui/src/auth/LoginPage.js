@@ -1,10 +1,12 @@
 import { Col, Button, Form, Input, Row, Typography } from "antd";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useAuth, useLogInUser } from "./hooks";
 
 function LoginPage() {
   const auth = useAuth();
   const logInUser = useLogInUser();
+
+  console.log("error", logInUser.isError);
 
   const onFinish = (credentials) => {
     logInUser.mutate(credentials);
@@ -44,11 +46,11 @@ function LoginPage() {
                     ? "error"
                     : ""
                 }
-                help={logInUser.isError ? "Invalid username" : null}
+                help={logInUser.isError ? "Unrecognized username" : null}
                 rules={[
                   {
                     required: true,
-                    message: "Please input your username!",
+                    message: "Please input your username",
                   },
                 ]}
               >
@@ -60,6 +62,11 @@ function LoginPage() {
                 </Button>
               </Form.Item>
             </Form>
+          </Col>
+        </Row>
+        <Row justify="center">
+          <Col>
+            <Link to="/signup">New Here? Click here to sign up.</Link>
           </Col>
         </Row>
       </Col>

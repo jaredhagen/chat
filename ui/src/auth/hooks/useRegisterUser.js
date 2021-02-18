@@ -9,18 +9,21 @@ export default function useUserLogin() {
   return useMutation(
     async (credentials) => {
       const response = await axios.post(
-        `http://localhost:5000/users/login`,
+        `http://localhost:5000/users`,
         credentials
       );
       return response.data;
     },
     {
-      onSettled: (data, error, credentials) => {
-        const user = { username: credentials.username, token: data.token };
+      onSettled: (data) => {
+        const user = {
+          username: data.username,
+          token: data.username,
+        };
         auth.logIn(user);
       },
       onError: () => {
-        console.log("hmmm");
+        console.log("hmmmmmmmm");
       },
     }
   );

@@ -5,6 +5,7 @@ import { LoginPage, PrivateRoute, ProvideAuth } from "./auth";
 import { ChatPage } from "./chat";
 
 import "./App.css";
+import SignUpPage from "./auth/SignUpPage";
 
 function App() {
   return (
@@ -14,6 +15,9 @@ function App() {
           <Switch>
             <Route path="/login">
               <LoginPage />
+            </Route>
+            <Route path="/signup">
+              <SignUpPage />
             </Route>
             <PrivateRoute path={["/rooms/:roomId", "/"]}>
               <ChatPage />
