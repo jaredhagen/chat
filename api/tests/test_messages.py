@@ -86,6 +86,7 @@ def test_list_messages(integration_client, authorized_user, with_room):
         json={"content": "Hola"},
         headers=authorized_user,
     )
+    time.sleep(1)
     integration_client.post(
         "/rooms/{}/messages".format(with_room),
         json={"content": "Guten Tag"},
@@ -97,9 +98,10 @@ def test_list_messages(integration_client, authorized_user, with_room):
 
     messages = response.get_json()["messages"]
     messages_sans_generated = [remove_generated_values(message) for message in messages]
+    # Messages should also be in reverse chronological order
     assert messages_sans_generated == [
-        {"author": "gandalf", "content": "Hola"},
         {"author": "gandalf", "content": "Guten Tag"},
+        {"author": "gandalf", "content": "Hola"},
     ]
 
 

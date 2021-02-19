@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Add User",
+			"name": "Register User",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -36,7 +36,7 @@
 			"response": []
 		},
 		{
-			"name": "User Login",
+			"name": "Login User",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -72,7 +72,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Room 237\"\r\n}",
+					"raw": "{\r\n    \"id\": \"Test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -92,7 +92,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Room Message",
+			"name": "Add Message",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -106,19 +106,19 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/rooms/:id/messages",
+					"raw": "{{base_url}}/rooms/:roomId/messages",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"rooms",
-						":id",
+						":roomId",
 						"messages"
 					],
 					"variable": [
 						{
-							"key": "id",
-							"value": "ROM01EYMFSQHJFW6QB8Z5140WHBEW"
+							"key": "roomId",
+							"value": "Test"
 						}
 					]
 				}
@@ -160,7 +160,7 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "ROM01EYMFSQHJFW6QB8Z5140WHBEW"
+							"value": "Test"
 						}
 					]
 				}
