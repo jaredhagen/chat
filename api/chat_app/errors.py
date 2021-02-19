@@ -15,18 +15,18 @@ def register_error_handlers(app):
 
 def handle_bad_request(error):
     return {
-        'error': error.name,
-        'status_code': error.code,
+        "error": error.name,
+        "status_code": error.code,
         # flask-expects-json puts the validation error in the error
         # description field so we'll access the message from there
         # See: https://github.com/Fischerfredl/flask-expects-json#error-handling
-        'message': error.description.message
+        "message": error.description.message,
     }, error.code
 
 
 def handle_generic_exception(error):
     return {
-        'error': error.name,
-        'status_code': error.code,
-        'message': error.description
+        "error": error.name,
+        "status_code": error.code,
+        "message": error.description,
     }, error.code

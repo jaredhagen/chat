@@ -1,4 +1,3 @@
-
 from botocore.exceptions import ClientError
 from flask import current_app
 from flask_httpauth import HTTPTokenAuth
@@ -6,7 +5,7 @@ from werkzeug.exceptions import Forbidden, Unauthorized
 
 from chat_app.dynamodb import get_chat_table, PK, SK, USER_PARTITION_KEY
 
-auth = HTTPTokenAuth(scheme='Bearer')
+auth = HTTPTokenAuth(scheme="Bearer")
 
 
 @auth.verify_token
@@ -16,17 +15,14 @@ def verify_token(token):
     else:
         try:
             response = get_chat_table().get_item(
-                Key={
-                    PK: USER_PARTITION_KEY,
-                    SK: token
-                }
+                Key={PK: USER_PARTITION_KEY, SK: token}
             )
         except ClientError as e:
             current_app.logger.error(e)
             return None
         else:
-            if 'Item' in response:
-                username = response['Item'][SK]
+            if "Item" in response:
+                username = response["Item"][SK]
                 return username
             return None
 
@@ -45,7 +41,6 @@ def verify_token(token):
 @auth.error_handler
 def auth_error(status):
     if status == 401:
-        raise Unauthorized(
-            'Bearer authentication required.  Bearer <username>')
+        raise Unauthorized("Bearer authentication required.  Bearer <username>")
     elif status == 403:
         raise Forbidden()
