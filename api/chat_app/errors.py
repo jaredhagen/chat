@@ -9,11 +9,19 @@ from werkzeug.exceptions import BadRequest, HTTPException
 
 
 def register_error_handlers(app):
+    """
+    This is a simple helper function to be used during app initialization to
+    attach the error handlers found below.
+    """
     app.register_error_handler(BadRequest, handle_bad_request)
     app.register_error_handler(HTTPException, handle_generic_exception)
 
 
 def handle_bad_request(error):
+    """
+    Used to expose error messages provided by flask-expects-json.  This
+    function is called when any BadRequest exception is thrown in the app.
+    """
     return {
         "error": error.name,
         "status_code": error.code,
@@ -25,6 +33,10 @@ def handle_bad_request(error):
 
 
 def handle_generic_exception(error):
+    """
+    Used to provide a consistent error format.  This function is called when
+    any HTTPException exception is thrown in the app.
+    """
     return {
         "error": error.name,
         "status_code": error.code,

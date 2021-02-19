@@ -3,7 +3,6 @@ import time
 import pytest
 
 
-
 # Used to remove generated attributes from the message objects returned
 # by the api. I'm removing them to simplify testing. In a real world
 # scenario I'd likely spend the time to figure out how to configure the

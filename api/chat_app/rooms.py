@@ -52,6 +52,11 @@ add_room_schema = {
 @auth.login_required
 @expects_json(add_room_schema)
 def add_room():
+    """
+    Handles: GET /rooms
+
+    Simply adds a rooms to the DynamoDB table.
+    """
     room = Room(request.json["id"])
     add_item(room.to_dynamodb_item())
     return room.to_api_response()
@@ -60,6 +65,11 @@ def add_room():
 @bp.route("", methods=["GET"])
 @auth.login_required
 def get_rooms():
+    """
+    Handles: GET /rooms
+
+    Simply retrieves and returns all the rooms.
+    """
     items = query_partition(ROOM_PARTITION_KEY)
     rooms = [Room.from_dynamodb_item(item) for item in items]
     rooms.sort(key=(lambda room: room.last_active_at), reverse=True)

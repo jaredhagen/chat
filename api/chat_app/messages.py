@@ -70,21 +70,37 @@ add_message_schema = {
 @auth.login_required
 @expects_json(add_message_schema)
 def add_message(room_id):
+    """
+    Handles: POST /rooms/<room_id>/messages
+
+    This function looks up the room provided via the url param to ensure the
+    room exists.  It then creates a message and updates the last_active_at
+    attribute of the room and write both the updated room and message to Dynamo
+    """
     room_item = get_item({PK: ROOM_PARTITION_KEY, SK: room_id})
     if room_item is None:
         raise NotFound("Can't add message to non-existent room")
-    room = Room.from_dynamodb_item(room_item)
+
     message = Message(auth.current_user(), request.json["content"])
+
+    room = Room.from_dynamodb_item(room_item)
     room.last_active_at = message.created_at
+
     add_item(message.to_dynamodb_item(room_id))
     update_item(room.to_dynamodb_item())
+
     return message.to_api_response()
 
 
 @bp.route("", methods=["GET"])
 @auth.login_required
 def get_messages(room_id):
-    items = query_partition(room_id)
+    """
+    Handles: GET /rooms/<room_id>/messages
+
+    Simply retrieves and returns 50 latest messages in the given room.
+    """
+    items = query_partition(room_id, limit=50, scan_index_forward=False)
     return {
         "messages": [
             Message.from_dynamodb_item(item).to_api_response() for item in items

@@ -48,3 +48,23 @@ https://code.visualstudio.com/docs/remote/containers
 # Bugs
 
 Twice I've noticed the `dynamodb-setup` container start up and run before the `dynamodb` container is ready to handle requests. It's rare but, if this happens just run `docker-compose up` again and it usually works.
+
+# TODO
+
+- Pagintion: Currently the API would not be able to retrieve more than a single
+  "page" of results of any of the resources from DynamoDB. Also, exposing pagination
+  controls via our API could enable cool things like infinite scrolling of messages
+  in the UI.
+
+- DynamoDB Error Handling: Currently there is very minimal DynamoDB error handling
+  in the API. Ideally there would be more.
+
+- API Error Handling: Currently there is little to no API error handling in the
+  UI. Ideally there would be more.
+
+- UI Localization & Internationalization
+
+- Accessibility Considerations - Keyboard controls. Screen reader landmarks. Color Contrast.
+
+- More testing - Currently the API only has integration tests. Unit tests should
+  be written for the API as well. There are no tests in the front-end.

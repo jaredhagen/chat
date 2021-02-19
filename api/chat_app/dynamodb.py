@@ -30,16 +30,14 @@ def epoch_time():
     return int(time.time())
 
 
-def get_chat_table():
-    if "chat_table" not in g:
-        table_name = current_app.config["CHAT_DYNAMODB_TABLE_NAME"]
-        dynamodb = get_dynamodb()
-        g.chat_table = dynamodb.Table(table_name)
-
-    return g.chat_table
-
-
 def get_dynamodb():
+    """
+    Used to get an instance of the DynamoDB client. The endpoint_url can be
+    configured using the CHAT_DYNAMODB_ENDPOINT_URL environment variable. When
+    connecting to an AWS managed DynamoDB instance the endpoint_url should not
+    be specified and instead the boto3.resource function should only be passed
+    a region.
+    """
     if "dynamodb" not in g:
         endpoint_url = current_app.config["CHAT_DYNAMODB_ENDPOINT_URL"]
         g.dynamodb = boto3.resource(
@@ -49,7 +47,27 @@ def get_dynamodb():
     return g.dynamodb
 
 
+def get_chat_table():
+    """
+    Used to get an instance of the application Table to perform queries with.
+    The table name can be configured using the CHAT_DYNAMODB_TABLE_NAME
+    environment variable.
+    """
+    if "chat_table" not in g:
+        table_name = current_app.config["CHAT_DYNAMODB_TABLE_NAME"]
+        dynamodb = get_dynamodb()
+        g.chat_table = dynamodb.Table(table_name)
+
+    return g.chat_table
+
+
 def add_item(item):
+    """
+    Used to add an item to the dynamodb table. The condition expression
+    ensures that we don't overrite any existing records in the table.  If the
+    condition expression isn't met a response with a 409 status code is
+    returned.
+    """
     try:
         get_chat_table().put_item(
             Item=item, ConditionExpression=("attribute_not_exists({})".format(PK))
@@ -64,6 +82,10 @@ def add_item(item):
 
 
 def get_item(key):
+    """
+    Used to get an individual item from the dynamodb table. If there is no item
+    with the given key None is returned.
+    """
     try:
         response = get_chat_table().get_item(Key=key)
     except ClientError as error:
@@ -75,10 +97,27 @@ def get_item(key):
         return None
 
 
-def query_partition(partition_key):
+def query_partition(partition_key, limit=None, scan_index_forward=True):
+    """
+    Used to get all items in a partition (all items that have the same PK
+    attribute).
+
+    Limit - limits the number of records that DynamoDB processes before
+    returning not the number of items that are returned.  Fortunately this
+    distinction doesn't matter for our data. This is used when retrieving all
+    rooms and messages within a room.
+
+    ScanIndexForward - Tells DynamoDB in which order to read the items in the
+    partition.  When retrieving messages scan_index_forward should be False
+    so the latest messages are returned.
+
+    See: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Table.query
+    """
     try:
         response = get_chat_table().query(
-            KeyConditionExpression=Key(PK).eq(partition_key)
+            KeyConditionExpression=Key(PK).eq(partition_key),
+            Limit=limit,
+            ScanIndexForward=scan_index_forward,
         )
     except ClientError as error:
         current_app.logger.error(error)
@@ -90,6 +129,13 @@ def query_partition(partition_key):
 
 
 def update_item(item):
+    """
+    Used to update an item in the dynamodb table. This function performs a full
+    replace of the item.  DynamoDB has support for partial updates but that is
+    currently not needed by the application. The condition expression ensures
+    that we don't create a new record in the table. If the condition expression
+    isn't met a response with a 404 status code is returned.
+    """
     try:
         get_chat_table().put_item(
             Item=item, ConditionExpression=("attribute_exists({})".format(PK))
