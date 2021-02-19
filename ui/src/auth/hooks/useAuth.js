@@ -6,18 +6,18 @@ const authContext = createContext();
 
 function ProvideAuth({ children }) {
   const history = useHistory();
-  const [user, setUser] = useLocalStorage("user", null);
+  const [username, setUsername] = useLocalStorage("username", null);
 
-  function logIn(user) {
-    setUser(user);
+  function logIn(username) {
+    setUsername(username);
   }
 
   const logOut = () => {
-    setUser(null);
+    setUsername(null);
   };
 
   const auth = {
-    user,
+    username,
     logIn,
     logOut,
   };

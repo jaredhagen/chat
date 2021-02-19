@@ -9,7 +9,7 @@ export default function useGetMessages(roomId) {
       `http://localhost:5000/rooms/${roomId}/messages`,
       {
         headers: {
-          Authorization: `Bearer ${auth.user.token}`,
+          Authorization: `Bearer ${auth.username}`,
         },
       }
     );

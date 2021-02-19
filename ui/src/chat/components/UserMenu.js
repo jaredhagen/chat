@@ -31,7 +31,7 @@ export default function UserMenu() {
           icon={<UserOutlined />}
         />
         <Typography.Text strong style={{ padding: "0 8px", cursor: "pointer" }}>
-          Demo User
+          {auth.username}
         </Typography.Text>
       </div>
     </Popover>

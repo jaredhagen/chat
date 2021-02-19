@@ -1,4 +1,5 @@
-import { Layout, List } from "antd";
+import { Layout, List, Space, Typography } from "antd";
+import { DateTime } from "luxon";
 import { useParams } from "react-router-dom";
 
 import { useGetMessages } from "../hooks";
@@ -32,11 +33,19 @@ export default function Messages() {
           ),
         }}
         itemLayout="horizontal"
-        dataSource={data?.messages}
+        dataSource={data?.messages.slice().reverse()}
         renderItem={(message) => (
           <List.Item>
             <List.Item.Meta
-              title={message.author}
+              title={
+                <Space direction="horizontal">
+                  <Typography.Text>{message.author}</Typography.Text>
+                  <Typography.Text style={{ fontSize: ".7rem", color: "#bbb" }}>
+                    {/* Having to subtract a second to get the relative time to display nicely for new messages */}
+                    {DateTime.fromSeconds(message.createdAt - 1).toRelative()}
+                  </Typography.Text>
+                </Space>
+              }
               description={message.content}
             />
           </List.Item>

@@ -114,7 +114,7 @@ def query_partition(partition_key, limit=None, scan_index_forward=True):
     See: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Table.query
     """
     try:
-        fun_kwargs = {'Limit': limit} if limit else {}
+        fun_kwargs = {"Limit": limit} if limit else {}
         response = get_chat_table().query(
             KeyConditionExpression=Key(PK).eq(partition_key),
             ScanIndexForward=scan_index_forward,

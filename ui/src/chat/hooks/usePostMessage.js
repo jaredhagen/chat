@@ -1,5 +1,7 @@
-import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
+import { DateTime } from "luxon";
+import { useMutation, useQueryClient } from "react-query";
+
 import { useAuth } from "../../auth";
 
 // See: https://react-query.tanstack.com/guides/optimistic-updates
@@ -14,7 +16,7 @@ export default function usePostMessage(roomId) {
         newMessage,
         {
           headers: {
-            Authorization: `Bearer ${auth.user.token}`,
+            Authorization: `Bearer ${auth.username}`,
           },
         }
       );
@@ -30,8 +32,9 @@ export default function usePostMessage(roomId) {
               ...old.messages,
               {
                 id: "temp",
-                author: auth.user.username,
-                ...newMessage,
+                author: auth.username,
+                content: newMessage.content,
+                createdAt: DateTime.now().toSeconds(),
               },
             ],
           };
@@ -44,6 +47,7 @@ export default function usePostMessage(roomId) {
       },
       onSettled: () => {
         queryClient.invalidateQueries(messagesQueryKey);
+        queryClient.invalidateQueries("rooms");
       },
     }
   );

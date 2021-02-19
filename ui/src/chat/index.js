@@ -1,3 +1,4 @@
 import ChatPage from "./ChatPage";
+import RoomsPage from "./RoomsPage";
 
-export { ChatPage };
+export { ChatPage, RoomsPage };

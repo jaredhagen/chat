@@ -1,9 +1,11 @@
-import { Button, Layout, Menu, Spin } from "antd";
+import { Button, Col, Layout, Menu, Row, Spin, Typography } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { DateTime } from "luxon";
 import { createContext, useContext, useState, useEffect } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, Redirect, useHistory, useParams } from "react-router-dom";
 
-import { useGetRooms } from "../hooks";
+import { AddRoomModalContext } from "../components";
+import { useGetRooms, usePostRoom } from "../hooks";
 
 const RoomsMenuContext = createContext();
 
@@ -28,8 +30,8 @@ function RoomsMenu() {
   const { collapsed, setCollapsed, selectedRoom, setSelectedRoom } = useContext(
     RoomsMenuContext
   );
+  const { showModal } = useContext(AddRoomModalContext);
   const urlParams = useParams();
-  const history = useHistory();
   const { isLoading, error, data } = useGetRooms();
 
   useEffect(() => {
@@ -39,17 +41,20 @@ function RoomsMenu() {
       // Set the selected room to the one in the url if we can find it
       if (urlParams.roomId) {
         roomToSelect = data.rooms.find((room) => room.id == urlParams.roomId);
-      }
-      // Otherwise select the most recently active room
-      if (!roomToSelect) {
-        roomToSelect = data.rooms[0];
-        history.replace(`/rooms/${roomToSelect.id}`);
+        if (!roomToSelect) {
+        }
       }
       setSelectedRoom(roomToSelect);
     }
   });
 
+  if (isLoading) return <Spin />;
+
   if (error) return <div>Womp!</div>;
+
+  if (data?.rooms?.length == 0) {
+    return <Redirect to={`/`} />;
+  }
 
   return (
     <Layout.Sider
@@ -68,7 +73,12 @@ function RoomsMenu() {
           padding: "15px 10px 10px 10px",
         }}
       >
-        <Button block type="primary" icon={<PlusOutlined />}>
+        <Button
+          block
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={showModal}
+        >
           Add A Room
         </Button>
       </div>
@@ -84,7 +94,7 @@ function RoomsMenu() {
           }}
           defaultSelectedKeys={[selectedRoom.id]}
         >
-          {data.rooms.map((room) => (
+          {data?.rooms?.map((room) => (
             <Menu.Item
               key={room.id}
               onClick={() => {

@@ -25,8 +25,8 @@ function LoginPage() {
             <Typography.Title>Log in to Chat</Typography.Title>
           </Col>
         </Row>
-        <Row>
-          <Col offset={7} span={10}>
+        <Row justify="center">
+          <Col span={8}>
             <Form
               name="login"
               initialValues={{

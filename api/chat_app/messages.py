@@ -44,7 +44,7 @@ class Message:
         return {
             "author": self.author,
             "content": self.content,
-            "created_at": self.created_at,
+            "createdAt": self.created_at,
             "id": self.id,
         }
 

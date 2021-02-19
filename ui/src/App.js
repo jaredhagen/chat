@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { LoginPage, PrivateRoute, ProvideAuth } from "./auth";
-import { ChatPage } from "./chat";
+import { ChatPage, RoomsPage } from "./chat";
 
 import "./App.css";
 import SignUpPage from "./auth/SignUpPage";
@@ -19,8 +19,11 @@ function App() {
             <Route path="/signup">
               <SignUpPage />
             </Route>
-            <PrivateRoute path={["/rooms/:roomId", "/"]}>
+            <PrivateRoute path="/rooms/:roomId">
               <ChatPage />
+            </PrivateRoute>
+            <PrivateRoute path="/">
+              <RoomsPage />
             </PrivateRoute>
           </Switch>
         </Router>

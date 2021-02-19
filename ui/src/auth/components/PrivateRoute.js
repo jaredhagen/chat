@@ -8,7 +8,7 @@ function PrivateRoute({ children, ...rest }) {
     <Route
       {...rest}
       render={() =>
-        auth.user ? children : <Redirect to={{ pathname: "/login" }} />
+        auth.username ? children : <Redirect to={{ pathname: "/login" }} />
       }
     />
   );

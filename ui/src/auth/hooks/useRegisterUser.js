@@ -17,11 +17,7 @@ export default function useUserLogin() {
     {
       onSettled: (data, error) => {
         if (!error) {
-          const user = {
-            username: data.username,
-            token: data.username,
-          };
-          auth.logIn(user);
+          auth.logIn(data.username);
         }
       },
     }

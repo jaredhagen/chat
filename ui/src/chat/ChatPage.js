@@ -6,18 +6,21 @@ import {
   RoomsMenu,
   RoomsMenuProvider,
 } from "./components";
+import { AddRoomModalProvider } from "./components/AddRoomModal";
 
 export default function ChatPage() {
   return (
     <RoomsMenuProvider>
-      <Layout>
-        <RoomsMenu />
+      <AddRoomModalProvider>
         <Layout>
-          <RoomHeader />
-          <Messages></Messages>
-          <MessageEditor></MessageEditor>
+          <RoomsMenu />
+          <Layout>
+            <RoomHeader />
+            <Messages></Messages>
+            <MessageEditor></MessageEditor>
+          </Layout>
         </Layout>
-      </Layout>
+      </AddRoomModalProvider>
     </RoomsMenuProvider>
   );
 }

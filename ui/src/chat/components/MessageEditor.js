@@ -10,6 +10,7 @@ export default function MessageEditor() {
   const [form] = Form.useForm();
   const onFinish = (message) => {
     form.resetFields();
+    form.getFieldInstance("content").focus();
     postMessage.mutate(message);
   };
   return (

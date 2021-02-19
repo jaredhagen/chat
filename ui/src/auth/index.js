@@ -1,4 +1,4 @@
-import { useAuth, ProvideAuth } from "./hooks/useAuth";
+import { useAuth, ProvideAuth } from "./hooks";
 import LoginPage from "./LoginPage";
 import PrivateRoute from "./components/PrivateRoute";
 
