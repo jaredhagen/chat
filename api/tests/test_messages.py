@@ -11,7 +11,7 @@ import pytest
 # the sake of time.
 def remove_generated_values(dict):
     del dict["id"]
-    del dict["created_at"]
+    del dict["createdAt"]
     return dict
 
 
