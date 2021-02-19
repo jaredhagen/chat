@@ -1,7 +1,7 @@
 from botocore.exceptions import ClientError
 from flask import current_app
 from flask_httpauth import HTTPTokenAuth
-from werkzeug.exceptions import Forbidden, Unauthorized
+from werkzeug.exceptions import Forbidden, InternalServerError, Unauthorized
 
 from chat_app.dynamodb import get_chat_table, PK, SK, USER_PARTITION_KEY
 
@@ -12,19 +12,16 @@ auth = HTTPTokenAuth(scheme="Bearer")
 def verify_token(token):
     if not token:
         return None
+    try:
+        response = get_chat_table().get_item(Key={PK: USER_PARTITION_KEY, SK: token})
+    except ClientError as error:
+        current_app.logger.error(error)
+        return None
     else:
-        try:
-            response = get_chat_table().get_item(
-                Key={PK: USER_PARTITION_KEY, SK: token}
-            )
-        except ClientError as e:
-            current_app.logger.error(e)
-            return None
-        else:
-            if "Item" in response:
-                username = response["Item"][SK]
-                return username
-            return None
+        if "Item" in response:
+            username = response["Item"][SK]
+            return username
+        return None
 
 
 # The Flask_HTTPAuth package doesn't raise http exceptions like it
@@ -42,5 +39,6 @@ def verify_token(token):
 def auth_error(status):
     if status == 401:
         raise Unauthorized("Bearer authentication required.  Bearer <username>")
-    elif status == 403:
+    if status == 403:
         raise Forbidden()
+    raise InternalServerError()

@@ -1,6 +1,6 @@
-import boto3
-import os
 import time
+
+import boto3
 
 from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
@@ -54,12 +54,11 @@ def add_item(item):
         get_chat_table().put_item(
             Item=item, ConditionExpression=("attribute_not_exists({})".format(PK))
         )
-    except ClientError as e:
-        current_app.logger.error(e)
-        if e.response["Error"]["Code"] == "ConditionalCheckFailedException":
+    except ClientError as error:
+        current_app.logger.error(error)
+        if error.response["Error"]["Code"] == "ConditionalCheckFailedException":
             raise Conflict("Resource already exists.")
-        else:
-            raise InternalServerError()
+        raise InternalServerError() from error
     else:
         return item
 
@@ -67,14 +66,13 @@ def add_item(item):
 def get_item(key):
     try:
         response = get_chat_table().get_item(Key=key)
-    except ClientError as e:
-        current_app.logger.error(e)
-        raise InternalServerError()
+    except ClientError as error:
+        current_app.logger.error(error)
+        raise InternalServerError() from error
     else:
         if "Item" in response:
             return response["Item"]
-        else:
-            return None
+        return None
 
 
 def query_partition(partition_key):
@@ -82,14 +80,13 @@ def query_partition(partition_key):
         response = get_chat_table().query(
             KeyConditionExpression=Key(PK).eq(partition_key)
         )
-    except ClientError as e:
-        current_app.logger.error(e)
-        raise InternalServerError()
+    except ClientError as error:
+        current_app.logger.error(error)
+        raise InternalServerError() from error
     else:
         if "Items" in response:
             return response["Items"]
-        else:
-            return []
+        return []
 
 
 def update_item(item):
@@ -97,11 +94,10 @@ def update_item(item):
         get_chat_table().put_item(
             Item=item, ConditionExpression=("attribute_exists({})".format(PK))
         )
-    except ClientError as e:
-        current_app.logger.error(e)
-        if e.response["Error"]["Code"] == "ConditionalCheckFailedException":
+    except ClientError as error:
+        current_app.logger.error(error)
+        if error.response["Error"]["Code"] == "ConditionalCheckFailedException":
             raise NotFound("Resource not found.")
-        else:
-            raise InternalServerError()
+        raise InternalServerError() from error
     else:
         return item

@@ -1,5 +1,3 @@
-import time
-
 from dataclasses import dataclass, field
 from flask import Blueprint, request
 from flask_expects_json import expects_json

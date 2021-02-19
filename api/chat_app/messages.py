@@ -1,11 +1,10 @@
+from dataclasses import dataclass, field
+
 import ulid
 
-from botocore.exceptions import ClientError
-from boto3.dynamodb.conditions import Key
-from dataclasses import dataclass, field
 from flask import Blueprint, request
 from flask_expects_json import expects_json
-from werkzeug.exceptions import InternalServerError, NotFound
+from werkzeug.exceptions import NotFound
 
 from chat_app.auth import auth
 from chat_app.rooms import Room

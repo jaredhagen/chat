@@ -41,5 +41,4 @@ def user_login():
     item = get_item({PK: USER_PARTITION_KEY, SK: username})
     if item is None:
         raise Unauthorized("Invalid credentials.")
-    else:
-        return {"username": username}
+    return {"username": username}
