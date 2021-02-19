@@ -10,7 +10,7 @@ export default function usePostRoom() {
   return useMutation(
     async (newRoom) => {
       const response = await axios.post(
-        `http://localhost:5000/rooms`,
+        `${process.env.REACT_APP_CHAT_API_ENDPOINT}/rooms`,
         newRoom,
         {
           headers: {

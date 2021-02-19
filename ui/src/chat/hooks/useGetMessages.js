@@ -6,7 +6,7 @@ export default function useGetMessages(roomId) {
   const auth = useAuth();
   return useQuery(["messages", roomId], async () => {
     const response = await axios.get(
-      `http://localhost:5000/rooms/${roomId}/messages`,
+      `${process.env.REACT_APP_CHAT_API_ENDPOINT}/rooms/${roomId}/messages`,
       {
         headers: {
           Authorization: `Bearer ${auth.username}`,

@@ -11,7 +11,7 @@ export default function useGetRooms() {
     "rooms",
     async () => {
       const response = await axios.get(
-        "http://localhost:5000/rooms",
+        `${process.env.REACT_APP_CHAT_API_ENDPOINT}/rooms`,
         {
           headers: {
             Authorization: `Bearer ${auth.username}`,

@@ -9,7 +9,7 @@ export default function useUserLogin() {
   return useMutation(
     async (credentials) => {
       const response = await axios.post(
-        `http://localhost:5000/users/login`,
+        `${process.env.REACT_APP_CHAT_API_ENDPOINT}/users/login`,
         credentials
       );
       return response.data;

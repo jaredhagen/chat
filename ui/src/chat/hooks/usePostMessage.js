@@ -12,7 +12,7 @@ export default function usePostMessage(roomId) {
   return useMutation(
     async (newMessage) => {
       const response = await axios.post(
-        `http://localhost:5000/rooms/${roomId}/messages`,
+        `${process.env.REACT_APP_CHAT_API_ENDPOINT}/rooms/${roomId}/messages`,
         newMessage,
         {
           headers: {
