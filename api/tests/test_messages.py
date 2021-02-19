@@ -1,5 +1,7 @@
-import pytest
 import time
+
+import pytest
+
 
 
 # Used to remove generated attributes from the message objects returned

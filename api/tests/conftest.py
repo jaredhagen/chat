@@ -1,5 +1,4 @@
 import boto3
-import os
 import pytest
 import ulid
 
@@ -15,7 +14,7 @@ dynamodb = boto3.client(
 @pytest.fixture
 def integration_client():
     table_name = str(ulid.new())
-    createTable(table_name)
+    create_table(table_name)
     app = create_app(
         {
             "TESTING": True,
@@ -24,7 +23,7 @@ def integration_client():
         }
     )
     yield app.test_client()
-    deleteTable(table_name)
+    delete_table(table_name)
 
 
 @pytest.fixture
@@ -38,7 +37,7 @@ def unauthorized_user():
     return {"Authorization": "Bearer hackerman"}
 
 
-def createTable(table_name):
+def create_table(table_name):
     return dynamodb.create_table(
         TableName=table_name,
         KeySchema=[
@@ -53,5 +52,5 @@ def createTable(table_name):
     )
 
 
-def deleteTable(table_name):
+def delete_table(table_name):
     return dynamodb.delete_table(TableName=table_name)
