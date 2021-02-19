@@ -1,14 +1,14 @@
+import { useContext } from "react";
+
 import { Col, Divider, Layout, Row, Typography } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { useContext, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import { RoomsMenuContext } from "./RoomsMenu";
-import UserMenu from "./UserMenu";
+import { RoomsMenuContext, UserMenu } from "../components";
 
 export default function RoomHeader() {
-  const { collapsed, selectedRoom, setCollapsed } = useContext(
-    RoomsMenuContext
-  );
+  const { collapsed, setCollapsed } = useContext(RoomsMenuContext);
+  const urlParams = useParams();
 
   function toggleCollapsed() {
     setCollapsed(!collapsed);
@@ -50,7 +50,7 @@ export default function RoomHeader() {
                 }}
                 level={2}
               >
-                {selectedRoom?.name}
+                {urlParams.roomId}
               </Typography.Title>
             </Col>
           </Row>

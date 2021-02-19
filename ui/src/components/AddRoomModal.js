@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import { Button, Form, Input, Modal } from "antd";
+
 import { usePostRoom } from "../hooks";
 
 const AddRoomModalContext = createContext();
@@ -26,7 +27,7 @@ function AddRoomModalProvider({ children }) {
   return (
     <AddRoomModalContext.Provider value={{ showModal }}>
       {children}
-      <Modal title="Add a Room" visible={isVisibile}>
+      <Modal title="Add a Room" visible={isVisibile} footer={<></>}>
         <Form form={form} name="addRoom" onFinish={onFinish}>
           <Form.Item
             name="id"

@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../hooks";
 
 // See: https://react-query.tanstack.com/guides/optimistic-updates
 export default function usePostRoom() {
   const queryClient = useQueryClient();
   const auth = useAuth();
-  const roomsQueryKey = ["rooms"];
+  const roomsQueryKey = "rooms";
   return useMutation(
     async (newRoom) => {
       const response = await axios.post(
@@ -26,7 +26,7 @@ export default function usePostRoom() {
         const previousRooms = queryClient.getQueryData(roomsQueryKey);
         queryClient.setQueryData(roomsQueryKey, (old) => {
           return {
-            messages: [
+            rooms: [
               ...old.rooms,
               {
                 id: newRoom.name,

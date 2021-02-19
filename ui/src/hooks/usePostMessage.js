@@ -2,7 +2,7 @@ import axios from "axios";
 import { DateTime } from "luxon";
 import { useMutation, useQueryClient } from "react-query";
 
-import { useAuth } from "../../auth";
+import { useAuth } from "../hooks";
 
 // See: https://react-query.tanstack.com/guides/optimistic-updates
 export default function usePostMessage(roomId) {
@@ -29,13 +29,15 @@ export default function usePostMessage(roomId) {
         queryClient.setQueryData(messagesQueryKey, (old) => {
           return {
             messages: [
-              ...old.messages,
+              // New messages should go at the front of the array
+              // because messages are displayed in reverse order
               {
                 id: "temp",
                 author: auth.username,
                 content: newMessage.content,
                 createdAt: DateTime.now().toSeconds(),
               },
+              ...old.messages,
             ],
           };
         });

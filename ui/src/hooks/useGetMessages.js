@@ -1,32 +1,30 @@
 import { useQuery } from "react-query";
 import axios from "axios";
-import { useAuth } from "../../auth";
+import { useAuth } from "../hooks";
 
-// Consider the room data stale after 10 seconds
-const STALE_TIME = 10000;
+// Consider the message data stale after 2 seconds
+const STALE_TIME = 2000;
 
-export default function useGetRooms() {
+export default function useGetMessages(roomId) {
   const auth = useAuth();
   return useQuery(
-    "rooms",
+    ["messages", roomId],
     async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_CHAT_API_ENDPOINT}/rooms`,
+        `${process.env.REACT_APP_CHAT_API_ENDPOINT}/rooms/${roomId}/messages`,
         {
           headers: {
             Authorization: `Bearer ${auth.username}`,
           },
-        },
-        {
-          staleTime: STALE_TIME,
         }
       );
       return response.data;
     },
     {
       retry: false,
-      onError: (error, other, other2, other3) => {
-        if (error.response.status == 401) {
+      staleTime: STALE_TIME,
+      onError: (error) => {
+        if (error?.response?.status == 401) {
           auth.logOut();
         }
       },

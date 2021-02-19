@@ -1,8 +1,8 @@
-import { Avatar, Button, Dropdown, Popover, Row, Typography } from "antd";
+import { Avatar, Button, Popover, Typography } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
-import { useAuth } from "../../auth";
+import { useAuth } from "../hooks";
 
 export default function UserMenu() {
   const auth = useAuth();
