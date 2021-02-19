@@ -18,7 +18,7 @@ This app is setup with docker-compose so that you can run things locally without
 
 We're ready to let Docker Compose do it's magic. Simply run the following command from the root of the project.
 
-Note: The docker-compose.yml is configured using `.env` file at the root of the project. You can change things like what localhost port numbers are used for each of the services there.
+Note: The docker-compose.yml is configured using `.env` file at the root of the project. You can change things like what localhost port numbers are used for each of the services there. If you change the localhost ports in the console ouput from the containers will not reflect those changes because the the port definitions only change the local port mapping in the docker compose file.
 
 Note: Twice I've noticed the `dynamodb-setup` container start up and run before the `dynamodb` container is ready to handle requests. It's rare but, if this happens just run `docker-compose up dynamodb-setup` in another terminal window.
 
