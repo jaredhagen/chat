@@ -8,7 +8,7 @@ ENV FLASK_APP=chat_app
 ENV FLASK_RUN_HOST=0.0.0.0
 
 COPY requirements.txt ./
-RUN pip install -r requirements.txt --quiet
+RUN pip install -r requirements.txt --quiet --no-cache-dir
 
 COPY . .
 
