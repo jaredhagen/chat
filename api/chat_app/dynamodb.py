@@ -81,9 +81,9 @@ def add_item(item):
             Item=item, ConditionExpression=("attribute_not_exists({})".format(PK))
         )
     except ClientError as error:
-        current_app.logger.error(error)
         if error.response["Error"]["Code"] == "ConditionalCheckFailedException":
             raise Conflict("Resource already exists.")  # pylint: disable=W0707
+        current_app.logger.error(error)
         raise InternalServerError() from error
     else:
         return item
@@ -148,9 +148,9 @@ def update_item(item):
             Item=item, ConditionExpression=("attribute_exists({})".format(PK))
         )
     except ClientError as error:
-        current_app.logger.error(error)
         if error.response["Error"]["Code"] == "ConditionalCheckFailedException":
             raise NotFound("Resource not found.")  # pylint: disable=W0707
+        current_app.logger.error(error)
         raise InternalServerError() from error
     else:
         return item

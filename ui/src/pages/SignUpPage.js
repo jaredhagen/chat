@@ -1,19 +1,22 @@
-import { Link, Redirect } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { SimpleForm } from "../components";
 import { useRegisterUser } from "../hooks";
 import SimplePage from "./SimplePage";
 
 function LoginPage() {
+  const history = useHistory();
   const registerUser = useRegisterUser();
 
   const onFinish = (username) => {
-    registerUser.mutate(username);
+    registerUser.mutate(username, {
+      onSuccess: () => {
+        history.push("/");
+      },
+    });
   };
 
-  return registerUser.isSuccess ? (
-    <Redirect push to={{ pathname: "/" }} />
-  ) : (
+  return (
     <SimplePage
       title="Sign up to Chat"
       alternateLink={
