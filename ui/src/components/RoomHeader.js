@@ -4,7 +4,7 @@ import { Col, Divider, Layout, Row, Typography } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 
-import { RoomsMenuContext } from "./RoomsProvider" 
+import { RoomsMenuContext } from "./RoomsMenu";
 import UserMenu from "./UserMenu";
 
 export default function RoomHeader() {

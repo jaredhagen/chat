@@ -2,7 +2,7 @@ env:
   browser: true
   es2021: true
 extends:
-  - 'plugin:react/recommended'
+  - "plugin:react/recommended"
   - airbnb
   - prettier
   - prettier/react
@@ -13,8 +13,12 @@ parserOptions:
   sourceType: module
 plugins:
   - react
-rules: {
-  "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-  "react/jsx-uses-react": "off",
-  "react/react-in-jsx-scope": "off"
-}
+rules:
+  {
+    "no-nested-ternary": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-uses-react": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+  }

@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import axios from "axios";
-import useAuth from "./useAuth";
+import { useAuth } from "./useAuth";
 
 // Consider the room data stale after 10 seconds
 const STALE_TIME = 10000;

@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import axios from "axios";
-import useAuth from "./useAuth";
+import { useAuth } from "./useAuth";
 
 // Consider the message data stale after 2 seconds
 const STALE_TIME = 2000;

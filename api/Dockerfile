@@ -1,4 +1,7 @@
-FROM python:3.9-alpine
+# I was running into issues installing black during the pip install when running using 
+# python:3.9-alpine image. if I had more time I'd explore getting this working with with
+# alpine image. See: https://github.com/psf/black/issues/1106  
+FROM python:3.9
 
 WORKDIR /usr/src/app
 

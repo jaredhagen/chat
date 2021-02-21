@@ -3,7 +3,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { createContext, useContext, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { AddRoomModalContext } from "./AddRoomModal"
+import { AddRoomModalContext } from "./AddRoomModal";
 import { RoomsContext } from "./RoomsProvider";
 
 const RoomsMenuContext = createContext();
