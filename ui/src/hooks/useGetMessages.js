@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import axios from "axios";
-import { useAuth } from "../hooks";
+import { useAuth } from "./useAuth";
 
 // Consider the message data stale after 2 seconds
 const STALE_TIME = 2000;
@@ -24,7 +24,7 @@ export default function useGetMessages(roomId) {
       retry: false,
       staleTime: STALE_TIME,
       onError: (error) => {
-        if (error?.response?.status == 401) {
+        if (error?.response?.status === 401) {
           auth.logOut();
         }
       },

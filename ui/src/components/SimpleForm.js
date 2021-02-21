@@ -15,7 +15,7 @@ export default function SimpleForm({
   const [defaultForm] = Form.useForm();
 
   return (
-    <Form form={form ? form : defaultForm} name={name} onFinish={onFinish}>
+    <Form form={form || defaultForm} name={name} onFinish={onFinish}>
       <Form.Item
         name={inputName}
         hasFeedback={isLoading || hasError}

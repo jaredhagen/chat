@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useMutation } from "react-query";
-import { useAuth } from "../hooks";
+import { useAuth } from "./useAuth";
 
 // See: https://react-query.tanstack.com/guides/optimistic-updates
 export default function useUserLogin() {

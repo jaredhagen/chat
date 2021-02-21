@@ -2,7 +2,7 @@ import { Link, Redirect } from "react-router-dom";
 
 import { SimpleForm } from "../components";
 import { useLogInUser } from "../hooks";
-import { SimplePage } from "../pages";
+import SimplePage from "./SimplePage";
 
 function LoginPage() {
   const logInUser = useLogInUser();
@@ -12,7 +12,7 @@ function LoginPage() {
   };
 
   return logInUser.isSuccess ? (
-    <Redirect push={true} to={{ pathname: "/" }}></Redirect>
+    <Redirect push to={{ pathname: "/" }} />
   ) : (
     <SimplePage
       title="Log in to Chat"

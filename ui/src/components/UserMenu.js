@@ -17,7 +17,7 @@ export default function UserMenu() {
       }
       placement="bottom"
       trigger={["click"]}
-      arrowPointAtCenter={true}
+      arrowPointAtCenter
       visible={popoverVisible}
       onVisibleChange={(visible) => {
         setPopoverVisible(visible);

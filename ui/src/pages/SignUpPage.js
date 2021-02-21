@@ -2,7 +2,7 @@ import { Link, Redirect } from "react-router-dom";
 
 import { SimpleForm } from "../components";
 import { useRegisterUser } from "../hooks";
-import { SimplePage } from "../pages";
+import SimplePage from "./SimplePage";
 
 function LoginPage() {
   const registerUser = useRegisterUser();
@@ -12,7 +12,7 @@ function LoginPage() {
   };
 
   return registerUser.isSuccess ? (
-    <Redirect push={true} to={{ pathname: "/" }}></Redirect>
+    <Redirect push to={{ pathname: "/" }} />
   ) : (
     <SimplePage
       title="Sign up to Chat"
