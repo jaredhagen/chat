@@ -3,7 +3,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import { createContext, useContext, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { AddRoomModalContext, RoomsContext } from "../components";
+import { AddRoomModalContext } from "./AddRoomModal"
+import { RoomsContext } from "./RoomsProvider";
 
 const RoomsMenuContext = createContext();
 
@@ -33,8 +34,8 @@ function RoomsMenu() {
       breakpoint="md"
       collapsed={collapsed}
       collapsedWidth="0"
-      onCollapse={(collapsed) => {
-        setCollapsed(collapsed);
+      onCollapse={(collapse) => {
+        setCollapsed(collapse);
       }}
       trigger={null}
     >

@@ -1,15 +1,13 @@
-import React, { useContext, createContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useContext, createContext } from "react";
 import useLocalStorage from "./useLocalStorage";
 
 const authContext = createContext();
 
 function ProvideAuth({ children }) {
-  const history = useHistory();
   const [username, setUsername] = useLocalStorage("username", null);
 
-  function logIn(username) {
-    setUsername(username);
+  function logIn(usrname) {
+    setUsername(usrname);
   }
 
   const logOut = () => {

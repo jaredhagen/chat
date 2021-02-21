@@ -4,7 +4,8 @@ import { Col, Divider, Layout, Row, Typography } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 
-import { RoomsMenuContext, UserMenu } from "../components";
+import { RoomsMenuContext } from "./RoomsProvider" 
+import UserMenu from "./UserMenu";
 
 export default function RoomHeader() {
   const { collapsed, setCollapsed } = useContext(RoomsMenuContext);

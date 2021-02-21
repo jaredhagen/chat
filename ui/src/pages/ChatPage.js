@@ -1,7 +1,5 @@
-import { useContext } from "react";
-
 import { Layout } from "antd";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 
 import {
   AddRoomModalProvider,
@@ -10,14 +8,11 @@ import {
   RoomHeader,
   RoomsMenu,
   RoomsMenuProvider,
-  RoomsContext,
   RoomsProvider,
 } from "../components";
-import { RoomsPage } from "../pages";
+import RoomsPage from "./RoomsPage";
 
 export default function ChatPage() {
-  const { path } = useRouteMatch();
-
   return (
     <RoomsProvider>
       <RoomsMenuProvider>
@@ -28,8 +23,8 @@ export default function ChatPage() {
                 <RoomsMenu />
                 <Layout>
                   <RoomHeader />
-                  <Messages></Messages>
-                  <MessageEditor></MessageEditor>
+                  <Messages />
+                  <MessageEditor />
                 </Layout>
               </Layout>
             </AddRoomModalProvider>

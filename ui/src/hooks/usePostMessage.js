@@ -2,7 +2,7 @@ import axios from "axios";
 import { DateTime } from "luxon";
 import { useMutation, useQueryClient } from "react-query";
 
-import { useAuth } from "../hooks";
+import useAuth from "./useAuth";
 
 // See: https://react-query.tanstack.com/guides/optimistic-updates
 export default function usePostMessage(roomId) {
@@ -26,8 +26,7 @@ export default function usePostMessage(roomId) {
       onMutate: async (newMessage) => {
         await queryClient.cancelQueries(messagesQueryKey);
         const previousMessages = queryClient.getQueryData(messagesQueryKey);
-        queryClient.setQueryData(messagesQueryKey, (old) => {
-          return {
+        queryClient.setQueryData(messagesQueryKey, (old) => ({
             messages: [
               // New messages should go at the front of the array
               // because messages are displayed in reverse order
@@ -39,8 +38,7 @@ export default function usePostMessage(roomId) {
               },
               ...old.messages,
             ],
-          };
-        });
+          }));
 
         return { previousMessages };
       },

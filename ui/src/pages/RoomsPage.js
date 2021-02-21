@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 
 import { RoomsContext, SimpleForm } from "../components";
 import { usePostRoom } from "../hooks";
-import { SimplePage } from "../pages";
+import SimplePage from "./SimplePage";
 
 export default function RoomsPage() {
   const { rooms } = useContext(RoomsContext);
