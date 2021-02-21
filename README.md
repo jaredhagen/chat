@@ -33,7 +33,7 @@ That command is spinning up the following services:
 
 The docker-compose.yml is configured using `.env` file at the root of the project. You can change things like what localhost port numbers are used for each of the services there.
 
-**Note: If you change the localhost ports in the console ouput from the containers will not reflect those changes because the the port definitions only change the local port mapping in the docker compose file.**
+**Note: If you change the localhost ports, the console ouput from the containers will not reflect those changes because the the port definitions only change the local port mapping in the docker compose file.**
 
 ## Testing
 
