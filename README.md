@@ -55,10 +55,10 @@ A [Postman](https://www.postman.com/downloads/) collection is available for inte
 
 1. Starting from the `/api` folder. Follow the steps [here](https://flask.palletsprojects.com/en/1.1.x/installation/#create-an-environment) for creating and activating a virtual environment.
 1. Install project requirements: `pip install -r requirements.txt`
-1. Run the api and dynamodb services using `docker-compose up api dynamodb dynamodb-setup`
-1. Write some code. Local files are synced with docker using volumes which will trigger
-   auto reloading.
+1. Run the api and dynamodb services using `docker-compose up api dynamodb dynamodb-setup`. The API will be availbe at http://localhost:5000 if using the default configuration.
 
+- Local files are synced with docker using volumes which will trigger
+  auto reloading.
 - The following commands can be used for automatic formatting and linting
   - Automatic formatting: `python -m black .`
   - Linting: `python -m pylint chat_app`
@@ -66,10 +66,11 @@ A [Postman](https://www.postman.com/downloads/) collection is available for inte
 ### UI
 
 1. Starting from the `/ui` folder. Install node_modules using `yarn install`
-1. Run the ui and backend services using `docker-compose up`
-1. Write some code. Local files are synced with docker using volumes which will trigger
-   auto reloading.
+1. Run the ui and backend services using `docker-compose up`. The UI will be availbe at
+   http://localhost:3000 if using the default configuration.
 
+- Local files are synced with docker using volumes which will trigger
+  auto reloading.
 - The following command can be used for automatic formatting and linting
   - `yarn run lint`
 
