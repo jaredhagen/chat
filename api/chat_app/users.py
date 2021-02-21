@@ -51,8 +51,8 @@ def user_login():
     """
     Handles: POST /users
 
-    Looks up a user in the DynamoDB table. Returns a 401 if the user doesn't
-    exist otherwise returns the username.
+    Looks up a user in the DynamoDB table. Returns a 401 if the user doesn't exist
+    otherwise returns the username.
     """
     username = request.json["username"]
     item = get_item({PK: USER_PARTITION_KEY, SK: username})

@@ -13,6 +13,9 @@ dynamodb = boto3.client(
 
 @pytest.fixture
 def integration_client():
+    # We want to start with a fresh DynamoDB table for every one of our tests so we'll
+    # generate a random table name create the table and then inject that into our
+    # application config.  One the test is finished running remove the table.
     table_name = str(ulid.new())
     create_table(table_name)
     app = create_app(

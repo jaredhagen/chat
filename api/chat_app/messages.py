@@ -35,9 +35,10 @@ class Message:
     """
     A simple dataclass to represent a Message
     """
+
     author: str
     content: str
-    id: int = field(default_factory=new_message_id) # pylint: disable=C0103
+    id: int = field(default_factory=new_message_id)  # pylint: disable=C0103
     created_at: int = field(default_factory=epoch_time)
 
     def to_dynamodb_item(self, room_id):
@@ -92,9 +93,9 @@ def add_message(room_id):
     """
     Handles: POST /rooms/<room_id>/messages
 
-    This function looks up the room provided via the url param to ensure the
-    room exists.  It then creates a message and updates the last_active_at
-    attribute of the room and write both the updated room and message to Dynamo
+    This function looks up the room provided via the url param to ensure the room
+    exists.  It then creates a message and updates the last_active_at attribute of the
+    room and write both the updated room and message to Dynamo
     """
     room_item = get_item({PK: ROOM_PARTITION_KEY, SK: room_id})
     if room_item is None:

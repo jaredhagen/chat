@@ -22,7 +22,8 @@ class Room:
     """
     A simple dataclass to represent a Room
     """
-    id: str # pylint: disable=C0103
+
+    id: str  # pylint: disable=C0103
     last_active_at: int = field(default_factory=epoch_time)
 
     def to_dynamodb_item(self):
