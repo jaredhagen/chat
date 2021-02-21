@@ -1,3 +1,7 @@
+"""
+This module defines a flask Blueprint for registering and verifying users.
+"""
+
 from flask import Blueprint, request
 from flask_expects_json import expects_json
 from werkzeug.exceptions import Unauthorized
@@ -11,9 +15,10 @@ bp = Blueprint("users", __name__, url_prefix="/users")
 add_user_schema = {
     "type": "object",
     "properties": {
-        "username": {"type": "string"},
+        "username": {"type": "string", "minLength": 1, "maxLength": 100},
     },
     "required": ["username"],
+    "additionalProperties": False,
 }
 
 
@@ -33,9 +38,10 @@ def add_user():
 user_login_schema = {
     "type": "object",
     "properties": {
-        "username": {"type": "string"},
+        "username": {"type": "string", "minLength": 1, "maxLength": 100},
     },
     "required": ["username"],
+    "additionalProperties": False,
 }
 
 

@@ -1,13 +1,17 @@
+"""
+This module defines a flask Blueprint for adding and listing Rooms.
+"""
+
 from dataclasses import dataclass, field
 from flask import Blueprint, request
 from flask_expects_json import expects_json
 
 from chat_app.auth import auth
 from chat_app.dynamodb import (
-    epoch_time,
-    query_partition,
     add_item,
+    epoch_time,
     PK,
+    query_partition,
     ROOM_PARTITION_KEY,
     SK,
 )
@@ -15,10 +19,16 @@ from chat_app.dynamodb import (
 
 @dataclass
 class Room:
-    id: str
+    """
+    A simple dataclass to represent a Room
+    """
+    id: str # pylint: disable=C0103
     last_active_at: int = field(default_factory=epoch_time)
 
     def to_dynamodb_item(self):
+        """
+        Used to get a dict representation of a Room for storage in DynamoDB
+        """
         return {
             PK: ROOM_PARTITION_KEY,
             SK: self.id,
@@ -26,10 +36,16 @@ class Room:
         }
 
     def to_api_response(self):
+        """
+        Used to get a dict representation of a Room for an API response
+        """
         return {"id": self.id, "lastActiveAt": self.last_active_at, "name": self.id}
 
     @staticmethod
     def from_dynamodb_item(item: dict):
+        """
+        Used to create a Room from a dict representing a DynamoDB item
+        """
         return Room(
             item[SK],
             int(item["last_active_at"]),
@@ -42,9 +58,10 @@ bp = Blueprint("rooms", __name__, url_prefix="/rooms")
 add_room_schema = {
     "type": "object",
     "properties": {
-        "id": {"type": "string"},
+        "id": {"type": "string", "minLength": 1, "maxLength": 100},
     },
     "required": ["id"],
+    "additionalProperties": False,
 }
 
 

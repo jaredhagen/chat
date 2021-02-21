@@ -1,3 +1,6 @@
+"""
+Contains the application factory for the Chat app
+"""
 import os
 
 from flask import Flask
@@ -5,7 +8,9 @@ from flask_cors import CORS
 
 
 def create_app(test_config=None):
-    # create and configure the app
+    """
+    Creates and configures the Chat app
+    """
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY="dev",
@@ -22,19 +27,19 @@ def create_app(test_config=None):
     if test_config:
         app.config.from_mapping(test_config)
 
-    from . import errors
+    from . import errors # pylint: disable=C0415
 
     errors.register_error_handlers(app)
 
-    from . import users
+    from . import users # pylint: disable=C0415
 
     app.register_blueprint(users.bp)
 
-    from . import rooms
+    from . import rooms # pylint: disable=C0415
 
     app.register_blueprint(rooms.bp)
 
-    from . import messages
+    from . import messages # pylint: disable=C0415
 
     app.register_blueprint(messages.bp)
 

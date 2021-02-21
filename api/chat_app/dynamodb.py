@@ -1,3 +1,8 @@
+"""
+This module contains functions with a simplified interface for adding,
+updating and retrieving items from DynamoDB. With error handling that
+throws appropriate HTTP exceptions.
+"""
 import time
 
 import boto3
@@ -27,7 +32,11 @@ ROOM_PARTITION_KEY = "rooms"
 
 
 def epoch_time():
-    return int(time.time())
+    """
+    Return a UNIX timestamp in milliseconds.  Used for setting the created_at
+    attribute on a Message and the last_active_at attribute on a Room
+    """
+    return int(time.time() * 1000)
 
 
 def get_dynamodb():
@@ -75,7 +84,7 @@ def add_item(item):
     except ClientError as error:
         current_app.logger.error(error)
         if error.response["Error"]["Code"] == "ConditionalCheckFailedException":
-            raise Conflict("Resource already exists.")
+            raise Conflict("Resource already exists.") # pylint: disable=W0707
         raise InternalServerError() from error
     else:
         return item
@@ -111,7 +120,7 @@ def query_partition(partition_key, limit=None, scan_index_forward=True):
     partition.  When retrieving messages scan_index_forward should be False
     so the latest messages are returned.
 
-    See: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Table.query
+    See: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Table.query pylint: disable=C0301
     """
     try:
         fun_kwargs = {"Limit": limit} if limit else {}
@@ -144,7 +153,7 @@ def update_item(item):
     except ClientError as error:
         current_app.logger.error(error)
         if error.response["Error"]["Code"] == "ConditionalCheckFailedException":
-            raise NotFound("Resource not found.")
+            raise NotFound("Resource not found.") # pylint: disable=W0707
         raise InternalServerError() from error
     else:
         return item

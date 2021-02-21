@@ -1,3 +1,6 @@
+"""
+This module defines a flask Blueprint for adding and listing Messages.
+"""
 from dataclasses import dataclass, field
 
 import ulid
@@ -9,29 +12,38 @@ from werkzeug.exceptions import NotFound
 from chat_app.auth import auth
 from chat_app.rooms import Room
 from chat_app.dynamodb import (
+    add_item,
     epoch_time,
     get_item,
-    query_partition,
-    add_item,
-    update_item,
     PK,
-    SK,
+    query_partition,
     ROOM_PARTITION_KEY,
+    SK,
+    update_item,
 )
 
 
 def new_message_id():
+    """
+    Returns a string representation of a ULID.  Used when creating a new Message.
+    """
     return str(ulid.new())
 
 
 @dataclass
 class Message:
+    """
+    A simple dataclass to represent a Message
+    """
     author: str
     content: str
-    id: int = field(default_factory=new_message_id)
+    id: int = field(default_factory=new_message_id) # pylint: disable=C0103
     created_at: int = field(default_factory=epoch_time)
 
     def to_dynamodb_item(self, room_id):
+        """
+        Used to get a dict representation of a Message for storage in DynamoDB
+        """
         return {
             PK: room_id,
             SK: self.id,
@@ -41,6 +53,9 @@ class Message:
         }
 
     def to_api_response(self):
+        """
+        Used to get a dict representation of a Message for an API response
+        """
         return {
             "author": self.author,
             "content": self.content,
@@ -50,6 +65,9 @@ class Message:
 
     @staticmethod
     def from_dynamodb_item(item):
+        """
+        Used to create a Message from a dict representing a DynamoDB item
+        """
         return Message(
             item["author"], item["content"], item[SK], int(item["created_at"])
         )
@@ -60,9 +78,10 @@ bp = Blueprint("messages", __name__, url_prefix="/rooms/<room_id>/messages")
 add_message_schema = {
     "type": "object",
     "properties": {
-        "content": {"type": "string"},
+        "content": {"type": "string", "minLength": 1, "maxLength": 1000},
     },
     "required": ["content"],
+    "additionalProperties": False,
 }
 
 

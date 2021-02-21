@@ -1,3 +1,6 @@
+"""
+This module defines custom error handlers to generate custom error response.
+"""
 from werkzeug.exceptions import BadRequest, HTTPException
 
 # for more information on flask error handling patterns

@@ -1,3 +1,7 @@
+"""
+This module contains functions for verifying https Authorization headers for
+use with flask_http auth.
+"""
 from botocore.exceptions import ClientError
 from flask import current_app
 from flask_httpauth import HTTPTokenAuth
