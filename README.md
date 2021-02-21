@@ -2,13 +2,13 @@
 
 ## Overview
 
-The repo has two projects in it. An API found in `/app` and a UI found in `/ui`.
+The repo has two projects in it. An API found in `/api` and a UI found in `/ui`.
 
-### API
+#### API
 
 The API is a [Flask](https://flask.palletsprojects.com/en/1.1.x/) app. The project structure of the API follows the project structure outlined in the Flask documentation [here](https://flask.palletsprojects.com/en/1.1.x/tutorial/layout/). The API is backed by [DynamoDB](https://aws.amazon.com/dynamodb/) for data storage.
 
-### UI
+#### UI
 
 The UI is a React app. The files in the UI are grouped by type (components, hooks, pages). The UI is built using the [Ant Design](https://ant.design/) component library and uses [react-query](https://react-query.tanstack.com/) for fetching, caching, synchronizing and updating server state.
 
@@ -22,18 +22,18 @@ The project is setup with [docker-compose](https://docs.docker.com/compose/) so 
 docker-compose up
 ```
 
-That command is spinning up the following services:
+The above command is starting up the following services:
 
 1. `api` - A Flask app served on http://localhost:5000 by default
 1. `ui` - A React app served on http://localhost:3000 by default
 1. `dynamodb` - An instance of DynamoDB Local. Table data is persisted as long as this service is running. When the service stops all data in it is lost.
-1. `dynamodb-setup` - This service starts up creates the DynamoDB table and then exits.
+1. `dynamodb-setup` - This creates the DynamoDB table and then exits.
 
 ## Configuration
 
 The docker-compose.yml is configured using `.env` file at the root of the project. You can change things like what localhost port numbers are used for each of the services there.
 
-**Note: If you change the localhost ports in the console ouput from the containers will not reflect those changes because the the port definitions only change the local port mapping in the docker compose file.**
+**Note: If you change the localhost ports, the console ouput from the containers will not reflect those changes because the the port definitions only change the local port mapping in the docker compose file.**
 
 ## Testing
 
