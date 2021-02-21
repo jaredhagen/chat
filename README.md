@@ -26,24 +26,27 @@ The above command is starting up the following services:
 
 1. `api` - A Flask app served on http://localhost:5000 by default
 1. `ui` - A React app served on http://localhost:3000 by default
-1. `dynamodb` - An instance of DynamoDB Local. Table data is persisted as long as this service is running. When the service stops all data in it is lost.
-1. `dynamodb-setup` - This creates the DynamoDB table and then exits.
+1. `dynamodb` - DynamoDB Local served on http://localhost:8000 by default.
+   - Note: Table data is persisted as long as this service is running. When this service stops all data in it is lost.
+1. `dynamodb-setup` - A service that creates the DynamoDB table and then exits.
 
 ## Configuration
 
 `docker-compose.yml` is configured using `.env` file at the root of the project. You can change things like what localhost port numbers are used for each of the services there.
 
-**Note: If you change the localhost ports, the console ouput from the containers will not reflect those changes because the the port definitions only change the local port mapping in the docker compose file.**
+**Note: If you change the localhost ports, the console ouput from the containers will not reflect those changes. This is because the the port definitions only change the local port mapping in the docker compose file.**
 
 ## Testing
 
 ### API Integration Tests
 
-The API has a suite of integration tests that can be run using the following docker command. The services in this docker compose file are stand-alone (i.e. they are not dependent on any other running services and can safely be run without affecting data in other DynamoDB Local instances).
+The API has a suite of integration tests that can be run using the following command.
 
 ```sh
 docker-compose -f docker-compose.tests.yml up --build --abort-on-container-exit
 ```
+
+**Note: The services in the above docker compose file are stand-alone (i.e. they are not dependent on any other running services and can safely be run without affecting data in other DynamoDB Local instances).**
 
 ### Postman Collection
 
