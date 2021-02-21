@@ -31,7 +31,7 @@ The above command is starting up the following services:
 
 ## Configuration
 
-The docker-compose.yml is configured using `.env` file at the root of the project. You can change things like what localhost port numbers are used for each of the services there.
+`docker-compose.yml` is configured using `.env` file at the root of the project. You can change things like what localhost port numbers are used for each of the services there.
 
 **Note: If you change the localhost ports, the console ouput from the containers will not reflect those changes because the the port definitions only change the local port mapping in the docker compose file.**
 
@@ -55,10 +55,10 @@ A [Postman](https://www.postman.com/downloads/) collection is available for inte
 
 1. Starting from the `/api` folder. Follow the steps [here](https://flask.palletsprojects.com/en/1.1.x/installation/#create-an-environment) for creating and activating a virtual environment.
 1. Install project requirements: `pip install -r requirements.txt`
-1. Run the api and dynamodb services using `docker-compose up api dynamodb dynamodb-setup`. The API will be availbe at http://localhost:5000 if using the default configuration.
+1. Run the api and dynamodb services using `docker-compose up api dynamodb dynamodb-setup`.
+   The API will be available at http://localhost:5000 if using the default configuration.
 
-- Local files are synced with docker using volumes which will trigger
-  auto reloading.
+- Local files are synced with the container using volumes which will trigger auto reloading.
 - The following commands can be used for automatic formatting and linting
   - Automatic formatting: `python -m black .`
   - Linting: `python -m pylint chat_app`
@@ -66,18 +66,17 @@ A [Postman](https://www.postman.com/downloads/) collection is available for inte
 ### UI
 
 1. Starting from the `/ui` folder. Install node_modules using `yarn install`
-1. Run the ui and backend services using `docker-compose up`. The UI will be availbe at
+1. Run the ui and backend services using `docker-compose up`. The UI will be available at
    http://localhost:3000 if using the default configuration.
 
-- Local files are synced with docker using volumes which will trigger
-  auto reloading.
+- Local files are synced with the container using volumes which will trigger auto reloading.
 - The following command can be used for automatic formatting and linting
   - `yarn run lint`
 
 ## TODO
 
-- Workflow: Setup containerized development environment. [Start here.](https://docs.microsoft.com/en-us/learn/modules/use-docker-container-dev-env-vs-code/)
-- Workflow: Setup pull request testing and linting checks. [Start here.](https://github.com/github/super-linter)
+- Workflow: Setup containerized development environments. [Start here.](https://docs.microsoft.com/en-us/learn/modules/use-docker-container-dev-env-vs-code/)
+- Workflow: Setup continuous integration. [Start here.](https://github.com/github/super-linter)
 - API: Look into Python dependency managment patterns. [Start here.](https://kennethreitz.org/essays/2016/02/25/a-better-pip-workflow)
 - API: Unit tests should be added in addition to the existing integration tests.
 - API: More comprehensive DynamoDB error handling should be put in place.
@@ -86,5 +85,5 @@ A [Postman](https://www.postman.com/downloads/) collection is available for inte
 - UI: More comprehensive API error handling should be put in place.
 - UI: `react-query` uses some pretty aggresive refetching of stale data these settings could be tuned down.
 - UI: The copy in the UI should really be templatized for localization support.
-- UI: Accessibility was not really a consideration as I built out the UI. Screen reader landmarks and keyboard controls along with things like color contrast all should be considered.
+- UI: Accessibility has not been a focus. Screen reader landmarks and keyboard controls along with things like color contrast all should be considered.
 - UI: The UI has no tests. I just ran out of time. My React skills were very rusty going into this.
