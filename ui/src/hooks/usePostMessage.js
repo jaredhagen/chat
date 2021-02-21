@@ -35,7 +35,7 @@ export default function usePostMessage(roomId) {
                 id: "temp",
                 author: auth.username,
                 content: newMessage.content,
-                createdAt: DateTime.now().toSeconds(),
+                createdAt: DateTime.now().toMillis(),
               },
               ...old.messages,
             ],

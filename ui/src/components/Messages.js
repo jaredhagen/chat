@@ -42,7 +42,7 @@ export default function Messages() {
                   <Typography.Text>{message.author}</Typography.Text>
                   <Typography.Text style={{ fontSize: ".7rem", color: "#bbb" }}>
                     {/* Having to subtract a second to get the relative time to display nicely for new messages */}
-                    {DateTime.fromSeconds(message.createdAt - 1).toRelative()}
+                    {DateTime.fromMillis(message.createdAt - 1).toRelative()}
                   </Typography.Text>
                 </Space>
               }

@@ -61,7 +61,7 @@ function RoomsMenu() {
           overflowX: "hidden",
           overflowY: "scroll",
         }}
-        defaultSelectedKeys={[urlParams.id]}
+        defaultSelectedKeys={[urlParams.roomId]}
       >
         {rooms?.map((room) => (
           <Menu.Item key={room.id}>
