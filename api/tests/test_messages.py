@@ -145,7 +145,7 @@ def test_list_50_messages(with_room, add_message, list_messages):
     assert len(messages) == 50
 
 
-def test_message_activity_updates_room_activity(with_room, list_rooms, add_message):
+def test_new_messages_update_room_activity(with_room, list_rooms, add_message):
     rooms_before = list_rooms().get_json()["rooms"]
     add_message(with_room, "The wise speak only of what they know.")
     rooms_after = list_rooms().get_json()["rooms"]
