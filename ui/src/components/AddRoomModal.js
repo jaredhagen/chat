@@ -19,15 +19,24 @@ function AddRoomModalProvider({ children }) {
   };
 
   const onFinish = (newRoom) => {
-    hideModal();
-    form.resetFields();
-    postRoom.mutate(newRoom);
+    postRoom.mutate(newRoom, {
+      onSuccess: () => {
+        hideModal();
+        form.resetFields();
+      },
+    });
   };
 
   return (
     <AddRoomModalContext.Provider value={{ showModal }}>
       {children}
-      <Modal title="Add a Room" visible={isVisibile} footer={<></>}>
+      <Modal
+        title="Add a Room"
+        destroyOnClose
+        footer={null}
+        onCancel={hideModal}
+        visible={isVisibile}
+      >
         <Form form={form} name="addRoom" onFinish={onFinish}>
           <Form.Item
             name="id"
